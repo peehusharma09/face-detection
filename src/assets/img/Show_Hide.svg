@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-name="Show/Hide" width="18.609" height="18.609" viewBox="0 0 18.609 18.609">
+    <path data-name="Rectangle 1489" style="fill:none" d="M0 0h18v18H0z"/>
+    <g data-name="Icon feather-eye-off">
+        <path data-name="Path 805" d="M13.5 13.7A7.422 7.422 0 0 1 9 15.333C3.7 15.333.667 9 .667 9A14.457 14.457 0 0 1 4.5 4.3m2.909-1.443A6.625 6.625 0 0 1 9 2.667C14.3 2.667 17.333 9 17.333 9a14.7 14.7 0 0 1-1.633 2.525m-5.091-.847a2.21 2.21 0 0 1-2.225.682 2.326 2.326 0 0 1-1.64-1.713 2.445 2.445 0 0 1 .653-2.325" transform="translate(.333 .333)" style="stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.333px;fill:none"/>
+        <path data-name="Path 806" d="m.667.667 16.666 16.666" transform="translate(.333 .333)" style="stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.333px;fill:none"/>
+    </g>
+</svg>

@@ -1,0 +1,61 @@
+.popup-container {
+  display: flex;
+  align-items: start;
+}
+.emp-img {
+  width: 500px; /* Adjust as needed */
+  height: 371px; /* Adjust as needed */
+  border-radius: 10px; /* Makes the image round */
+  margin-right: 20px; /* Adds space between image and details */
+  @media screen  and (min-width:767px)   and (max-width:992px){
+    width: 304px;
+    height: 342px;
+    border-radius: 10px;
+    margin-right: 20px;
+  }
+}
+.popup-container .details {
+  font-family: Arial, sans-serif; /* Use your preferred font */
+}
+.confirm-button{
+  border: none;
+  background-color: #000000;
+  color: #fff;
+  border-radius: 5px;
+  padding: 7px 30px;
+  margin-right: 15px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif !important;
+}
+.cancel-button{
+  border: 1px solid #000000;
+color: #000000;
+ background-color: #fff;
+  border-radius: 5px;
+  padding: 7px 30px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif !important;
+}
+.icon-img{
+  width: 22px;
+}
+.time-text{
+  color: #000000;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  font-family: "Poppins", sans-serif !important;
+}
+.label-text{
+  color: #505050;
+  font-size: 18px;
+  margin: 0;
+  font-family: "Poppins", sans-serif !important;
+}
+
+.buttons{
+  height: 53px;
+  width: 170px;
+  font-size: 20px;
+  font-weight: 600;
+}

@@ -1,0 +1,153 @@
+label {
+  // font-weight: bold;
+  // margin-bottom: 5px;
+}
+
+
+// .d-flex {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center; 
+// }
+ .helight {
+ border: 1px solid red !important;
+}
+.validationMessage {
+  color: red;
+  font-size: 14px;
+  
+}
+.label-value{
+  font-size: 17px;
+  padding-top: 2px;
+}
+
+.numeric-keyboard {
+  display: flex;
+  flex-direction: column;
+  
+  border-radius: 5px;
+  
+  margin-left: 80px;
+}
+
+.row {
+  display: flex;
+  button:hover {
+    background-color: #fa757a;
+    color: #fff;
+    border: 1px solid #000;
+}  
+}
+
+button {
+  flex: 1;
+  border: none;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 16px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a0a0a0;
+}
+
+.cross {
+  color: #262626;
+  border: 1px solid #262626;
+}
+
+.enter {
+ color: #ffffff; 
+ background-color: #262626;
+ :hover{
+  background-color: #5a5a5a !important;
+ }
+}
+
+button{
+  border: 1px solid #e3e0e0;
+}
+.emp-label{
+  white-space: nowrap;
+  margin-right: 10px;
+}
+.status-wrapper{
+display: flex;
+  align-items: start;
+  gap: 15px;
+  .status-text{
+    font-size: 15px;
+    color: #444444;
+  }
+}
+.id-wrapper{
+  .id-input{
+  border-radius: 0px 5px 5px 0px !important;
+  height: 35px;
+  padding-left: 10px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 22px;
+  width: 100%;
+  border: 1px solid #e0e0e0;;
+  }
+}
+
+.radio-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-options input[type="radio"] {
+  
+}
+
+.radio-options label {
+ 
+  margin-bottom: 5px; 
+}
+
+.status {
+  font-size: 14px;
+  font-weight: 600;
+  color: grey;
+}
+.employee-vid{
+    margin-left: 15px;
+    padding: 11px;
+    background-color: #cfcdcd;
+    border-radius: 5px 0px 0px 5px;
+    font-weight: 600;
+}
+
+.id-input {
+  
+  border: 1px solid #ccc; 
+  background-color: #f9f9f9; 
+  color: #555; 
+  cursor: default; 
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; 
+}
+
+.flex-item {
+  flex-basis: calc(50% - 10px);
+  margin-bottom: 15px; 
+}
+
+@media (min-width: 768px) {
+  .flex-item {
+    flex-basis: calc(33.33% - 10px);
+  }
+}
+
+
+

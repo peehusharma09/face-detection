@@ -1,0 +1,80 @@
+
+
+<div  class="login-wrapper">
+<div  class="bg-white border-none card-body p-4 shadow rounded ">
+  <form class="sign-in-sign-up-form ">
+
+
+    <div class="form-row mb-4">
+      <div class="form-group ">
+        <h6 class="text-start heading-text">Hi!</h6>
+        <h6 class="text-start heading-text mb-0">Login to your dashboard</h6>
+      </div>
+    </div>
+
+
+    <div class="form-group input-section mb-4">
+      <label  class="label-text"  for="username">Email</label>
+      <input class="input-field " type="text" id="email" [(ngModel)]="email" name="email" placeholder="Enter your email">
+  <span style="color: red;" *ngIf="showmsg && !email">*This field is required</span>
+
+    </div>
+
+    <div class="form-group input-section">
+      <label class="label-text"  for="password">Password</label>
+      <div class="eyeicon-box">
+        <input class="input-field w-100" type="{{ showPassword ? 'text' : 'password' }}" id="password" [(ngModel)]="password" name="password" placeholder="Enter your password">
+        <img alt="" class="eye-icon" src="../../assets/img/{{showPassword ? 'Show' : 'Show_Hide'}}.svg" (click)="showPassword = !showPassword" alt="show-hide" />
+      </div>
+      <span style="color: red;" *ngIf="showmsg && !password">*This field is required</span>
+    </div>
+
+    <div class="form-row mb-2 mt-4">
+      <div class="form-group col-12">
+        <!-- <button [disabled]="loadingNext" [ngClass]="loadingNext ? 'loadingClass' : ''" (click)="onSubmit()" type="submit"
+          class="btn text-center d-inline-flex btn-block text-center btn-primary login-btn"> -->
+          <button [disabled]="loadingNext" (click)="onSubmit()" type="submit"
+          class="btn text-center d-inline-flex btn-block text-center btn-primary login-btn">
+          <span class="w-100 " *ngIf="!loadingNext">Login</span>
+
+          <!-- <mat-spinner style="margin-left: 200px;" *ngIf="loadingNext" [diameter]="20"></mat-spinner> -->
+        </button>
+      </div>
+    </div>
+    <div class="form-row forget-section">
+      <div class="col-6">
+        <div class="mb-primary">
+          <div class="customized-checkbox checkbox-default checkbox-section">
+            <input type="checkbox" value="">
+            <label class="reminder-text">
+              Remember me
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 text-end password-setion">
+       <div>
+        <svg  xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-lock pr-2 lock-icon">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    <!-- <a  [routerLink]="'/forget-password'" class="bluish-text reminder-text link-cls">
+      Forget Password?
+    </a> -->
+       </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-12">
+        <p class="text-center footer-text mt-5 footer-copy">
+          Copyright @ 2024 by Vidhema Technology
+        </p>
+      </div>
+    </div>
+    <!-- <button type="submit" (click)="onSubmit()">Log in</button> -->
+  </form>
+</div>
+</div>

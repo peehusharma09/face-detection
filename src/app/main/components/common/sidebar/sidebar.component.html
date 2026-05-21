@@ -1,0 +1,29 @@
+
+<div class="sidebar p-2 flex-20 sidebar" [ngClass]="{'hidden-sidebar': sidebarVisible}">
+  <img class="logo-width" src="../../../../../assets/img/2021322124955-522vidhema-logopurewhite.webp">
+  <ul  class="text-white mt-3">
+    <ng-container *ngFor="let item of MenuArr">
+      <li *ngIf="!item.isSubfolder" class="text-white mb-1 ">
+
+        <a class="text-white" [routerLink]=" item.route">
+          <i [class]="item.icon" aria-hidden="true" class="me-2 sidebar-icon"></i>
+          {{ item.name }}</a>
+      </li>
+      <li class="text-white  i" *ngIf="item.isSubfolder" [ngClass]="item.isOpen ? 'hello' : ''" [class.open]="item.isOpen" class="subfolder p-2 mb-1" (click)="toggleSubfolder(item)">
+       
+        <span class="text-white">
+          <i [class]="item.icon" aria-hidden="true" class="me-2 sidebar-icon"></i>
+          {{ item.name }}</span>
+        <ul class="text-white">
+          <li class="text-white" *ngFor="let subitem of item.submenu">
+            <a class="text-white" routerLink="{{ subitem.route }}">
+        <i [class]="subitem.icon" aria-hidden="true" class="me-2 "></i>
+              {{ subitem.name }}</a>
+          </li>
+        </ul>
+      </li>
+
+    </ng-container>
+  </ul>
+</div>
+

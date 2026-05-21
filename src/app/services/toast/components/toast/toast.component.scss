@@ -1,0 +1,36 @@
+/* toast.component.scss */
+
+/* Center-aligned toast */
+.toast-container {
+  position: fixed;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center the container */
+  width: 300px; /* Adjust width as needed */
+  z-index: 1000; /* Ensure the toast container is on top */
+}
+
+/* Custom style for success toast */
+.toast-success {
+  background-color: #5cb85c; /* Bootstrap green */
+  color: white;
+  border-radius: 5px; /* Rounded corners */
+  padding: 15px; /* Padding for better readability */
+}
+
+/* Custom style for error toast */
+.toast-error {
+  background-color: #d9534f; /* Bootstrap red */
+  color: white;
+  border-radius: 5px; /* Rounded corners */
+  padding: 15px; /* Padding for better readability */
+}
+
+/* Close button style */
+.toast-close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: white;
+}

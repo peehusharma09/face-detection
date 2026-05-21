@@ -1,0 +1,44 @@
+<div class="rounded  px-3 w-100">
+  <div class="d-flex align-items-center id-wrapper mb-3">
+    <p class="emp-label m-0 fw-bold">EMP ID:</p>
+    <span class="employee-vid">VID</span>
+    <input id="employeeIdInput" class="id-input" (ngModelChange)="employeeValueChange()" placeholder="Enter Employee ID" [(ngModel)]="employeeId" readonly>
+  </div>
+  <div class=" status-wrapper">
+    <div>
+      <p class="status-text fw-bold">Status:</p>
+    </div>
+    <div class="status">
+      <div class="flex-container">
+        <div *ngFor="let option of selectboxOptions" class="flex-item align-items-center d-flex ">
+          <input style="width: 25px; height: 25px;" class="mx-2" type="radio" (ngModelChange)="optionValueChange()" name="selectedOption" [value]="option.value" [(ngModel)]="selectedOption">
+          <label class="label-value">{{ option.label }}</label>
+        </div>
+      </div>
+      <div *ngIf="showValidation" class="validationMessage" >Please Select Status</div>
+    </div>
+  </div>
+
+  <div class="numeric-keyboard">
+    <div class="row">
+      <button (click)="onButtonClick(1)">1</button>
+      <button (click)="onButtonClick(2)">2</button>
+      <button (click)="onButtonClick(3)">3</button>
+    </div>
+    <div class="row">
+      <button (click)="onButtonClick(4)">4</button>
+      <button (click)="onButtonClick(5)">5</button>
+      <button (click)="onButtonClick(6)">6</button>
+    </div>
+    <div class="row">
+      <button (click)="onButtonClick(7)">7</button>
+      <button (click)="onButtonClick(8)">8</button>
+      <button (click)="onButtonClick(9)">9</button>
+    </div>
+    <div class="row">
+      <button class="cross" (click)="cancel()">Cancel</button>
+      <button (click)="onButtonClick(0)">0</button>
+      <button class="enter" (click)="enter()">Enter</button>
+    </div>
+  </div>
+</div>

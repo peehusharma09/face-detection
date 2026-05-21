@@ -1,0 +1,22 @@
+<div *ngIf="isContentVisible; else noAccess" class="px-4 pb-4 attendance-wrapper">
+  <app-loader></app-loader>
+  <div class="header-wrapper d-flex align-items-center justify-content-between">
+    <img class="logo-img" src="../assets/right.png">
+    <p class="date-text"> {{ currentDate }} | {{ currentTime }}</p>
+  </div>
+  <div class=" capture-wrapper pnn-4 card-body shadow rounded bg-white gap-4  d-flex">
+    <div class="w-50">
+      <app-camera></app-camera>
+    </div>
+    <div class="w-50">
+      <app-employee-details></app-employee-details>
+    </div>
+  </div>
+  <app-employee-attendance></app-employee-attendance>
+  <p class="copyright">Copyright © {{getCurrentYear()}} Vidhema Technologies Pte. Ltd. All Rights Reserved.</p>
+</div>
+
+<ng-template #noAccess>
+  <!-- Content to show when IP does not match -->
+  <p>Access Denied: Your IP Address does not have permission to view this page.</p>
+</ng-template>

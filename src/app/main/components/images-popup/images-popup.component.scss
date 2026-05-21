@@ -1,0 +1,28 @@
+.popup-container {
+    width: 1000px;
+    max-width: 89vw;
+    padding: 20px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .status-items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .status-item {
+    width: calc(50% - 20px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .status {
+    margin-top: 10px;
+  }
+  

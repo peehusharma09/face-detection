@@ -1,0 +1,140 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar {
+  width:100% ;
+  max-width: 200px;
+  height: 100%;
+  background-color: var( --dark-blue);
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar ul {
+
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  position: relative;
+}
+
+.sidebar li.subfolder {
+  cursor: pointer;
+}
+
+.sidebar li.subfolder.open ul {
+  display: block;
+}
+
+.sidebar ul ul {
+  display: none;
+
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+.sidebar a {
+  display: block;
+  color: #000;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.sidebar li:hover {
+  background-color: #b0b0b0;
+  border-radius: 15px ;
+}
+
+.sidebar button {
+  display: block;
+  background-color: transparent;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: left;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+}
+
+.flex-20 {
+  flex: 20%;
+  height: 100%;
+  background-color: var( --dark-blue);
+
+    img.logo-width{
+      width: 100%;
+      padding: 10px;
+    }
+
+}
+
+.flex-80 {
+  flex: 80%;
+  height: 100%;
+  background: red;
+}
+
+.logout-btn{
+  background-color: #ffff;
+  border-radius:  15px;
+  color: var(--blue);
+}
+.side-menu-icon{
+  width: 20px;
+  margin-right: 7px;
+}
+.sidebar{
+  ul{
+    cursor: pointer;
+    list-style-type: none;
+    li{
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+  }
+}
+.sidebar-icon{
+  background-color: #494949;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+// .hello{
+
+
+//   height: 100px;
+//   background: red;
+//   transition-property: height;
+//   transition-duration: 2s;
+// }
+// .hello{
+//   height: 300px;
+// }
+
+.hidden-sidebar{
+  display: none;
+  // transition: transform 0.3s ease-out;
+  // transform: translateX(100%);
+
+  // opacity: 0;
+  // pointer-events: none;
+  // transform: translateX(100%);
+  // transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+

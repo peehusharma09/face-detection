@@ -1,0 +1,68 @@
+<div class="">
+  <div class=" header shadow d-flex justify-content-between align-items-center" [ngClass]="{'flex-100': sidebarVisible}">
+
+    <div class=" input-wrapper"  (click)="toggleSidebar()" >
+
+      <img class="icon-width " src="../../../../../assets/img/menu.svg">
+
+    </div>
+
+
+    <div class="d-flex  align-items-center gap-5">
+      <div class="d-flex icon-wrapper ">
+        <button type="button" class="btn p-0 border-none bg-white position-relative me-3" (click)="notification()">
+          <img class="icon-width " src="../../../../../assets/img/notification-svgrepo-com (2).svg">
+          <span class="position-absolute counter top-2 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+            {{notificationArr?.data?.length || ''}}
+           <!-- <span  class="text-white">
+3
+           </span> -->
+          </span>
+        </button>
+<!--
+        <button type="button" class="btn mx-3 p-0 notification-btn" >
+          <img class="icon-width " src="../../../../../assets/img/notification-svgrepo-com (2).svg">
+        </button> -->
+        <!-- <button type="button" class="btn p-0 notification-btn">
+        <img class="icon-width" src="../../../../../assets/img/mode.png">
+
+
+      </button> -->
+        <!-- <button type="button" class="btn mx-3  p-0 notification-btn">
+       <img class="icon-width" src="../../../../../assets/img/maximize.png">
+
+      </button> -->
+        <!-- <button type="button" class="btn p-0 notification-btn">
+        <img class="icon-width" src="../../../../../assets/img/english-input-svgrepo-com.svg">
+      </button> -->
+
+      </div>
+      <div>
+        <p class="employer-name m-0">
+          {{username}}
+        </p>
+        <!-- <p  class="designation mb-0">
+          Employee
+        </p> -->
+      </div>
+      <!-- <div  class="profile-img-wrapper">
+        <img class="profile-img" src="../../../../../assets/img/profile.svg">
+      </div> -->
+      <!-- <div #opendiv>
+
+      </div> -->
+      <div class="dropdown-wrapper">
+        <div class="profile-img-wrapper dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <img class="profile-img" src="../../../../../assets/img/profile.svg">
+        </div>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a style="cursor: pointer;" class="dropdown-item" (click)="gotoprofile()">Profile</a></li>
+          <li><a class="dropdown-item" style="cursor: pointer;" (click)="logout()">Logout</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</div>

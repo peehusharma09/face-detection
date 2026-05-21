@@ -1,0 +1,37 @@
+.app-camera {
+  max-width: 50%;
+  flex: 0 0 50%;
+}
+p.copyright {
+  text-align: center;
+  font-size: 12px;
+}
+
+.header-wrapper {
+  .logo-img {
+    max-width: 200px;
+    width: 100%;
+  }
+}
+.pnn-4 {
+  padding: 1rem !important;
+}
+
+.capture-wrapper {
+  display: flex;
+  align-items: start;
+}
+
+.date-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.carousel {
+  width: 70%;
+  margin: auto;
+}
+
+.attendance-wrapper {
+  background: #f0eef9;
+}

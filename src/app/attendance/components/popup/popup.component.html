@@ -1,0 +1,53 @@
+<div class="popup-container p-4">
+  <div  class="">
+    <img class="emp-img" [src]="data.empImage" alt="Employee Image">
+  </div>
+    <div class="details w-50 ">
+      <div  class="d-flex gap-2 align-items-start mb-4">
+        <img class="icon-img" src="../../assets/profile-circle-svgrepo-com (4).svg">
+        <p class="time-text">Emp Name: </p>
+        <p  class="label-text">{{ data.empName }}</p>
+      </div>
+     
+      <div  class="d-flex gap-2 align-items-start mb-4">
+        <img class="icon-img" src="../../assets/profile-circle-svgrepo-com (4).svg">
+        <p class="time-text">Employee ID: </p>
+        <p  class="label-text">
+         VID{{ data.empID }}
+        </p>
+      </div>
+      <div  class="d-flex gap-2 align-items-start mb-4">
+        <img class="icon-img" src="../../assets/status-online-svgrepo-com.svg">
+        <p class="time-text">Status: </p>
+        <p  class="label-text">
+          {{ 
+            data.status === 'BreakIn' ? 'Break In' : 
+            data.status === 'BreakOut' ? 'Break Out' : 
+            data.status === 'LunchIn' ? 'Lunch In' :
+            data.status === 'LunchOut' ? 'Lunch Out' :
+            data.status 
+          }}
+                  </p>
+      </div>
+      <div  class="d-flex gap-2 align-items-start mb-4">
+        <img class="icon-img" src="../../assets/clock-ten-svgrepo-com.svg">
+        <p class="time-text"> Time: </p>
+        <p  class="label-text">  
+          {{ getTime() }}  
+        </p>
+      </div>
+      <div  class="d-flex gap-2 align-items-start mb-4">
+        <img class="icon-img" src="../../assets/calendar-days-svgrepo-com.svg">
+        <p class="time-text">Date:</p>
+        <p  class="label-text">  
+          {{ data.date | date:'dd MMM yyyy'}}
+        </p>
+      </div>
+  
+   
+      <div class="buttons mt-5 d-flex">
+        <button class="confirm-button" (click)="onConfirm()">Confirm</button>
+        <button class="cancel-button" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </div>

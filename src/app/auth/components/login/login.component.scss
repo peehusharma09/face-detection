@@ -1,0 +1,185 @@
+// /* login.component.scss */
+
+// .login-container {
+//   max-width: 400px;
+//   margin: 0 auto;
+//   padding: 20px;
+//   border: 1px solid #ccc;
+//   border-radius: 5px;
+//   background-color: #f9f9f9;
+// }
+
+// h2 {
+//   text-align: center;
+//   margin-bottom: 20px;
+// }
+
+// .form-group {
+//   margin-bottom: 15px;
+// }
+
+// label {
+//   display: block;
+//   font-weight: bold;
+// }
+
+// input[type="text"],
+// input[type="password"] {
+//   width: 100%;
+//   padding: 10px;
+//   border: 1px solid #ccc;
+//   border-radius: 5px;
+// }
+
+// button {
+//   width: 100%;
+//   padding: 10px;
+//   border: none;
+//   border-radius: 5px;
+//   background-color: #007bff;
+//   color: #fff;
+//   cursor: pointer;
+//   transition: background-color 0.3s ease;
+// }
+
+// button:hover {
+//   background-color: #0056b3;
+// }
+
+
+
+.back-image{
+  background-image: url("../../../../assets/bb.jpg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.eyeicon-box{
+  position: relative;
+}
+
+.login-form{
+  min-height: 100vh;
+  overflow-y: auto;
+  // box-shadow: var(--default-box-shadow);
+  // background-color: var(--authentication-form-bg);
+  background: #fff;
+  position: relative;
+  box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.5);
+
+  .sign-in-sign-up-form{
+    padding: 4rem;
+
+    .form-group{
+      margin-bottom: 1rem;
+
+      .form-row{
+        .form-group {
+          margin-bottom: 2rem;
+        }
+      }
+    }
+  }
+
+}
+
+.forget-section{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .checkbox-section{
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+}
+
+.password-setion{
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  .lock-icon{
+    stroke: #0d6efd;
+    width: 18px;
+    height: 18px;
+  }
+  .link-cls{
+    text-decoration: none;
+  }
+}
+
+.login-btn{
+  width: 100%;
+}
+
+.input-section {
+  position: relative; // Make the container relative
+  display: flex;
+  flex-direction: column;
+
+  .input-field {
+    background: #e8f0fe;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+  }
+
+  .eyeicon-box {
+    position: relative; // Ensure relative positioning
+    display: flex;
+    align-items: center;
+
+    .eye-icon {
+      position: absolute; // Position the eye icon absolutely
+      right: 10px; // Adjust as needed
+      top: 50%; // Center vertically
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+  }
+}
+
+
+.login-wrapper{
+  // background-image: url(../../../../assets/bg-img.jpeg);
+  background-image: url(../../../../assets/bg-img1.png);
+  background-repeat: no-repeat;
+  height: 100vh;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .card-body{
+    max-width: 500px;
+    width: 100%;
+    .heading-text{
+      font-size: 20px;
+    }
+    .label-text{
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .reminder-text{
+      font-size: 14px;
+    }
+    .password-setion{
+      display: flex;
+      align-items: center;
+      gap: 3px;
+  justify-content: end;
+    }
+    .footer-text{
+      font-size: 14px;
+    }
+    input::placeholder{
+font-size: 14px;
+    }
+  }
+
+}

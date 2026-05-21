@@ -1,0 +1,64 @@
+.employee-box {
+  border: 1px solid #262626;
+  border-radius: 5px;
+  background-color: #ffffff;
+  padding-top: 8px;
+  padding-right: none;
+}
+.py-8 {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+padding-right: 8px !important;
+  padding-left: 8px !important;
+}
+.myx-4 {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.employee-info {
+  font-size: 16px;
+}
+
+.employee-info p {
+  margin: 2px 0;
+}
+
+.img-card {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  max-width: 300px;
+
+  .img-bg-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+    overflow: hidden;
+
+    border-radius: 50px;
+    overflow: hidden;
+
+    .emp-image {
+      width: 80px;
+      height: inherit;
+
+
+    }
+  }
+
+}
+
+.label-span {
+  font-size: 10px;
+  color: #444444;
+  white-space: nowrap;
+  width: 100%;
+  // max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.emp-icon {
+  width: 10px;
+  margin-right: 5px;
+}

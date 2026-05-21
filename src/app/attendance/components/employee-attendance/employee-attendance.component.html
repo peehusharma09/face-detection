@@ -1,0 +1,62 @@
+<div *ngIf="employeeDetails.length > 0 " class="d-flex myx-4 bg-white shadow rounded overflow-auto px-3 py-8 gap-2">
+  <div class="" *ngFor="let detail of employeeDetails">
+    <div class="employee-box p-2 card-body rounded img-card">
+      <div class="employee-info d-flex align-items-center gap-3">
+        <div class="img-bg-box">
+          <img class="emp-image" src="{{ detail.image }}" alt="Employee Image">
+        </div>
+        <div>
+
+          <div class="">
+            <p class="d-flex  align-items-center  gap-3">
+              <span class="label-span lable-box">
+                <img class="emp-icon" src="../../assets/employee-id-svgrepo-com.svg">
+                Emp ID:
+              </span>
+              <span class="label-span">
+                {{ detail.VID }}
+              </span>
+            </p>
+          </div>
+          <div class="">
+            <p class="d-flex  align-items-center  gap-3">
+              <span class="label-span lable-box d-flex align-items-center">
+                <img class="emp-icon" src="../../assets/status-online-svgrepo-com.svg">
+                Emp Name:
+              </span>
+              <span class="label-span">
+                {{ detail.name}}
+              </span>
+            </p>
+          </div>
+          <div class="">
+            <p class="d-flex  align-items-center  gap-3">
+              <span class="label-span d-flex align-items-center lable-box">
+                <img class="emp-icon" src="../../assets/calendar-days-svgrepo-com.svg">
+                Date:
+              </span>
+              <span class="label-span">
+                {{ detail.date | date:'dd MMM yyyy':'UTC' }}
+              </span>
+            </p>
+          </div>
+            <div>
+              <p class="label-span">
+                In: {{ detail.In?.time ? (detail.In.time | date : "hh:mm a" : 'UTC') : '-' }} |
+                Out: {{ detail.Out?.time ? (detail.Out.time | date : "hh:mm a" : 'UTC') : '-' }}
+              </p>
+              <p class="label-span">
+                L. In: {{ detail.lunchIn?.time ? (detail.lunchIn.time | date : "hh:mm a" : 'UTC') : '-' }} |
+                L. Out: {{ detail.lunchOut?.time ? (detail.lunchOut.time | date : "hh:mm a" : 'UTC') : '-' }}
+              </p>
+              <ng-container *ngFor="let breakIn of detail.breakIn; let i = index">
+                <p class="label-span">
+                  B. In {{ i + 1 }}: {{ breakIn?.time ? (breakIn.time | date : "hh:mm a" : 'UTC') : '-' }} |
+                  B. Out {{ i + 1 }}: {{ detail.breakOut[i]?.time ? (detail.breakOut[i].time | date : "hh:mm a" : 'UTC') : '-' }}
+                </p>
+              </ng-container>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>

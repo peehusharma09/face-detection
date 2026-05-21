@@ -1,0 +1,21 @@
+
+<ng-container *ngIf="isContentVisible; else noAccess" >
+  <div style="background-color: #e0d8d8;">
+    <app-header></app-header>
+  </div>
+  <div class="flex">
+    <div class="main flex-20">
+      <app-sidebar></app-sidebar>
+    </div>
+  
+  <div class="main flex-80" [ngClass]="{'flex-100': sidebarVisible}">
+    <router-outlet></router-outlet>
+  </div>
+  </div>
+</ng-container >
+
+<ng-template #noAccess>
+  <!-- Content to show when IP does not match -->
+  <p>Access Denied: Your IP Address does not have permission to view this page.</p>
+</ng-template>
+
