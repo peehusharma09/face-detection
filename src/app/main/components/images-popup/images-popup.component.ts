@@ -8,8 +8,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class ImagesPopupComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-  private dialogRef: MatDialogRef<ImagesPopupComponent>
-) {
-  
+    private dialogRef: MatDialogRef<ImagesPopupComponent>
+  ) {
+
   }
 }

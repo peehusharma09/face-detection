@@ -6,14 +6,14 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class EmplyoeeService {
-  //  ApiPath:any = 'http://localhost:8093/api/'
-  ApiPath:any = 'https://attendance.test.api.ithemes.xyz/api/'
+  // ApiPath: any = 'http://localhost:8093/api/'
+  ApiPath: any = 'https://entry-systemapinew.onrender.com/api/'
   employeeAttendance = new BehaviorSubject('');
   disableEnterBtn = new Subject();
   employeePicClick = new Subject();
   employeePic = new Subject();
   private isLoggedIn: boolean = false;
-  private token: string | null = null; 
+  private token: string | null = null;
   constructor(private http: HttpClient) {
     this.setToken();
   }
@@ -37,7 +37,7 @@ export class EmplyoeeService {
       const tokenWithoutQuotes = this.token.replace(/^"(.*)"$/, '$1');
       headers = headers.set('Authorization', `Bearer ${tokenWithoutQuotes}`);
     }
-    
+
     return headers;
   }
 
@@ -68,7 +68,7 @@ export class EmplyoeeService {
     if (fromDate) {
       queryParams += `&fromdate=${fromDate}`;
     }
-    
+
     if (toDate) {
       queryParams += `&todate=${toDate}`;
     }
@@ -90,13 +90,13 @@ export class EmplyoeeService {
     return this.http.get(url, { headers });
   }
 
- 
+
   logInUser(data: any): Observable<any> {
     return this.http.post<any>(`${this.ApiPath}login`, data, {
       headers: this.getHeaders(),
     });
   }
-  
+
   findEmployeeDetailByFilter(): Observable<any> {
     return this.http.get(`${this.ApiPath}findEmployeeDetailByFilter`, {
       headers: this.getHeaders(),
@@ -109,7 +109,7 @@ export class EmplyoeeService {
     });
   }
 
-  editEmployee(data:any): Observable<any>{
+  editEmployee(data: any): Observable<any> {
     return this.http.put<any>(`${this.ApiPath}editEmployee`, data, {
       headers: this.getHeaders(),
     });
@@ -119,5 +119,28 @@ export class EmplyoeeService {
     return this.http.get<any>(`${this.ApiPath}employeeThreeDays`, {
       headers: this.getHeaders(),
     });
+  }
+  // faceAttendance(data: { imageUrl: string; status?: string; localTime?: string }): Observable<any> {
+  //   return this.http.post<any>(`${this.ApiPath}faceAttendance`, data, {
+  //     headers: this.getHeaders(),
+  //   });
+  // }
+  faceAttendance(data: { imageUrl: string; status?: string; localTime?: string }): Observable<any> {
+
+    console.log('API URL:', `${this.ApiPath}faceAttendance`);
+    console.log('Request Data:', data);
+
+    return this.http.post<any>(
+      `${this.ApiPath}faceAttendance`,
+      data,
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
+  getAllSystemSettings() {
+    return this.http.get(
+      'https://erp-backend-y4l2.onrender.com/api/getAllSystemSettings'
+    );
   }
 }

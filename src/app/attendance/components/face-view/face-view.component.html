@@ -1,0 +1,57 @@
+<div class="fv-wrapper">
+
+    <!-- Logo centered at top -->
+    <img class="fv-logo" [src]="logoUrl" />
+
+    <!-- Full-screen camera feed -->
+    <video #video autoplay playsinline class="fv-camera"></video>
+    <canvas #canvas style="display:none;"></canvas>
+
+    <!-- Attendance panel (slides up from bottom) -->
+    <div class="fv-attendance-panel" [class.visible]="showAttendance">
+        <div class="fv-cards-row">
+            <div class="fv-card" *ngFor="let record of attendanceRecords">
+                <!-- 
+         -->
+                <img [src]="getLatestImage(record)" class="fv-card-img" alt="photo" onerror="this.style.display='none'">
+
+                <div class="fv-card-info">
+                    <h4>{{ record.name }}</h4>
+                    <div class="fv-card-details">
+                        <p><span>In Time:</span> {{ formatTime(record.In?.time) }}</p>
+                        <p><span>Out Time:</span> {{ formatTime(record.Out?.time) }}</p>
+                        <p>
+                            <span>Date:</span>
+                            {{ record.date | date:'dd MMM yyyy':'Asia/Kolkata' }}
+                        </p>
+                        <p><span>Break In:</span> {{ getBreakTimes(record.breakIn) }}</p>
+                        <p><span>Break Out:</span> {{ getBreakTimes(record.breakOut) }}</p>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom bar: Show Attendance (left) + Camera button (right) -->
+    <div class="fv-bottom-bar">
+        <button class="fv-btn-show" (click)="toggleAttendance()">
+            {{ showAttendance ? 'Hide Attendance' : 'Show Attendance' }}
+        </button>
+        <button class="fv-btn-capture" (click)="captureAndSubmit()" [disabled]="isLoading">
+            <img src="../assets/camera.jpg" alt="Capture" width="52" height="50"
+                onerror="this.replaceWith(document.createTextNode('📷'))">
+        </button>
+    </div>
+
+    <!-- Loading overlay -->
+
+
+    <!-- Success popup -->
+    <div class="fv-popup fv-success" *ngIf="successMessage">{{ successMessage }}</div>
+
+    <!-- Error popup -->
+    <div class="fv-popup fv-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+</div>

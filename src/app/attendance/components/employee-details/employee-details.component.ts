@@ -25,12 +25,10 @@ export class EmployeeDetailsComponent {
   selectedOption: any
   emplyoeeMatched: boolean = false
   selectboxOptions = [
-    { value: 'In', label: 'In',},
-    { value: 'LunchIn', label: 'Lunch In',},
-    { value: 'BreakIn', label: 'Break In',},
-    { value: 'Out', label: 'Out',},
-    { value: 'LunchOut', label: 'Lunch Out',},
-    { value: 'BreakOut', label: 'Break Out',},
+    { value: 'In', label: 'In', },
+    { value: 'Out', label: 'Out', },
+    { value: 'BreakIn', label: 'Break-In', },
+    { value: 'BreakOut', label: 'Break-Out', },
   ];
   imageUrl: any;
   employeeName: any;
@@ -44,8 +42,8 @@ export class EmployeeDetailsComponent {
     private elementRef: ElementRef
   ) {
 
-    this.employeeService.disableEnterBtn.subscribe((value:any)=>{
-    this.spinnerService.showHideLoader(false);
+    this.employeeService.disableEnterBtn.subscribe((value: any) => {
+      this.spinnerService.showHideLoader(false);
     })
 
     this.employeeService.employeePic.subscribe((value: any) => {
@@ -88,17 +86,17 @@ export class EmployeeDetailsComponent {
     const dialogRef = this.dialog.open(PopupComponent, {
       width: '1000px',
       maxWidth: '89vw',
-      data: { 
-        empName: this.userDetails.username, 
-        empID: this.employeeId, 
-        status: this.selectedOption, 
-        time: new Date().toLocaleTimeString(), 
-        date: new Date(), 
-        empImage: this.imageUrl 
+      data: {
+        empName: this.userDetails.username,
+        empID: this.employeeId,
+        status: this.selectedOption,
+        time: new Date().toLocaleTimeString(),
+        date: new Date(),
+        empImage: this.imageUrl
       },
-      disableClose: false 
+      disableClose: false
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.confirmed === true) {
         this.save();
@@ -127,7 +125,7 @@ export class EmployeeDetailsComponent {
     if (!this.employeeId) {
       const element = this.elementRef.nativeElement.querySelector('#employeeIdInput');
       if (element) {
-     this.spinnerService.showHideLoader(false);
+        this.spinnerService.showHideLoader(false);
         element.classList.add('helight');
       }
       return;
@@ -140,63 +138,63 @@ export class EmployeeDetailsComponent {
     else {
       this.showValidation = false;
     }
-        this.employeeService.officeEmployee(this.employeeId).subscribe(
-          (response: any) => {
-            this.userDetails = response;
-              this.spinnerService.showHideLoader(true);
-              this.employeeService.employeePicClickFun(true);
-          },
-          (error: any) => {
-            this.spinnerService.showHideLoader(false);
-            this.employeeId = "";
-            this.selectedOption = "";
-            this.toastr.toast.snackbarError(error.error.message);
-          }
-        );
+    this.employeeService.officeEmployee(this.employeeId).subscribe(
+      (response: any) => {
+        this.userDetails = response;
+        this.spinnerService.showHideLoader(true);
+        this.employeeService.employeePicClickFun(true);
+      },
+      (error: any) => {
+        this.spinnerService.showHideLoader(false);
+        this.employeeId = "";
+        this.selectedOption = "";
+        this.toastr.toast.snackbarError(error.error.message);
+      }
+    );
   }
 
   save() {
-    if(this.selectedOption == "In"){
+    if (this.selectedOption == "In") {
       const postData = {
         id: this.employeeId,
-        imageUrl:this.imageUrl
-    };
-    this.employeeService.addEmployeeAttendance(postData).subscribe(
-      (response: any) => {
-        this.spinnerService.showHideLoader(false);
-        this.toastr.toast.snackbarSuccess("Congratulations on submitting the employee attendance successfully");
-        this.employeeService.employeeAttendanceFun(response.empID)
-        this.cancel();
-      },
-      (error: any) => {
-        this.selectedOption = ""
-        this.employeeId = ""
-        this.spinnerService.showHideLoader(false);
-        this.toastr.toast.snackbarError("API Error: " + error.error.message);
-      }
-    );
+        imageUrl: this.imageUrl
+      };
+      this.employeeService.addEmployeeAttendance(postData).subscribe(
+        (response: any) => {
+          this.spinnerService.showHideLoader(false);
+          this.toastr.toast.snackbarSuccess("Congratulations on submitting the employee attendance successfully");
+          this.employeeService.employeeAttendanceFun(response.empID)
+          this.cancel();
+        },
+        (error: any) => {
+          this.selectedOption = ""
+          this.employeeId = ""
+          this.spinnerService.showHideLoader(false);
+          this.toastr.toast.snackbarError("API Error: " + error.error.message);
+        }
+      );
     } else {
       const postData = {
         id: this.employeeId,
-        imageUrl:this.imageUrl,
-        status:this.selectedOption
-    };
-    this.employeeService.editEmployee(postData).subscribe(
-      (response: any) => {
-        this.toastr.toast.snackbarSuccess("Congratulations on submitting the employee Status successfully");
-        this.spinnerService.showHideLoader(false);
-        this.employeeService.employeeAttendanceFun(response.empID)
-        this.cancel();
-      },
-      (error: any) => {
-        this.selectedOption = ""
-        this.employeeId = ""
-        this.spinnerService.showHideLoader(false);
-        this.toastr.toast.snackbarError("API Error: " + error.error.message);
-      }
-    );
+        imageUrl: this.imageUrl,
+        status: this.selectedOption
+      };
+      this.employeeService.editEmployee(postData).subscribe(
+        (response: any) => {
+          this.toastr.toast.snackbarSuccess("Congratulations on submitting the employee Status successfully");
+          this.spinnerService.showHideLoader(false);
+          this.employeeService.employeeAttendanceFun(response.empID)
+          this.cancel();
+        },
+        (error: any) => {
+          this.selectedOption = ""
+          this.employeeId = ""
+          this.spinnerService.showHideLoader(false);
+          this.toastr.toast.snackbarError("API Error: " + error.error.message);
+        }
+      );
     }
-   
+
   }
 }
 

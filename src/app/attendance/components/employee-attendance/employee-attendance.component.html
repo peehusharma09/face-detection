@@ -36,26 +36,26 @@
                 Date:
               </span>
               <span class="label-span">
-                {{ detail.date | date:'dd MMM yyyy':'UTC' }}
+                {{ detail.date | date:'dd MMM yyyy':'Asia/Kolkata' }}
               </span>
             </p>
           </div>
-            <div>
-              <p class="label-span">
-                In: {{ detail.In?.time ? (detail.In.time | date : "hh:mm a" : 'UTC') : '-' }} |
-                Out: {{ detail.Out?.time ? (detail.Out.time | date : "hh:mm a" : 'UTC') : '-' }}
-              </p>
-              <p class="label-span">
-                L. In: {{ detail.lunchIn?.time ? (detail.lunchIn.time | date : "hh:mm a" : 'UTC') : '-' }} |
-                L. Out: {{ detail.lunchOut?.time ? (detail.lunchOut.time | date : "hh:mm a" : 'UTC') : '-' }}
-              </p>
+          <div>
+            <p class="label-span">
+
+              In: {{ detail.In?.time ? (detail.In.time | date:'hh:mm a':'Asia/Kolkata') : '-' }} |
+              Out: {{ detail.Out?.time ? (detail.Out.time | date:'hh:mm a':'Asia/Kolkata') : '-' }}
+
               <ng-container *ngFor="let breakIn of detail.breakIn; let i = index">
                 <p class="label-span">
-                  B. In {{ i + 1 }}: {{ breakIn?.time ? (breakIn.time | date : "hh:mm a" : 'UTC') : '-' }} |
-                  B. Out {{ i + 1 }}: {{ detail.breakOut[i]?.time ? (detail.breakOut[i].time | date : "hh:mm a" : 'UTC') : '-' }}
+                  B. In {{ i + 1 }}:
+                  {{ breakIn?.time ? (breakIn.time | date:'hh:mm a':'Asia/Kolkata') : '-' }}
+
+                  B. Out {{ i + 1 }}:
+                  {{ detail.breakOut[i]?.time ? (detail.breakOut[i].time | date:'hh:mm a':'Asia/Kolkata') : '-' }}
                 </p>
               </ng-container>
-            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 <div class="rounded  px-3 w-100">
   <div class="d-flex align-items-center id-wrapper mb-3">
     <p class="emp-label m-0 fw-bold">EMP ID:</p>
-    <span class="employee-vid">VID</span>
-    <input id="employeeIdInput" class="id-input" (ngModelChange)="employeeValueChange()" placeholder="Enter Employee ID" [(ngModel)]="employeeId" readonly>
+    <span class="employee-vid">EID</span>
+    <input id="employeeIdInput" class="id-input" (ngModelChange)="employeeValueChange()" placeholder="Enter Employee ID"
+      [(ngModel)]="employeeId" readonly>
   </div>
   <div class=" status-wrapper">
     <div>
@@ -11,11 +12,12 @@
     <div class="status">
       <div class="flex-container">
         <div *ngFor="let option of selectboxOptions" class="flex-item align-items-center d-flex ">
-          <input style="width: 25px; height: 25px;" class="mx-2" type="radio" (ngModelChange)="optionValueChange()" name="selectedOption" [value]="option.value" [(ngModel)]="selectedOption">
+          <input style="width: 25px; height: 25px;" class="mx-2" type="radio" (ngModelChange)="optionValueChange()"
+            name="selectedOption" [value]="option.value" [(ngModel)]="selectedOption">
           <label class="label-value">{{ option.label }}</label>
         </div>
       </div>
-      <div *ngIf="showValidation" class="validationMessage" >Please Select Status</div>
+      <div *ngIf="showValidation" class="validationMessage">Please Select Status</div>
     </div>
   </div>
 

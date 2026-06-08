@@ -5,7 +5,7 @@
     align-items: center;
     height: 100%;
     width: 100%;
-    z-index: 9;
+    z-index: 1;
     // background-color: rgba(0, 0, 0, 0.5);
     background-color: #ffffffb0;
     margin-left: -20px;
@@ -20,11 +20,16 @@
     animation: spin 2s linear infinite;
 }
 
-.loader-logo{
+.loader-logo {
     height: 100px;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

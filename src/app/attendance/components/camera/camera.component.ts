@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+// import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { CloudinaryService } from '../../service/cloudinary.service';
 import { finalize } from 'rxjs/operators';
 import { EmplyoeeService } from '../../service/emplyoee.service';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
@@ -27,16 +28,25 @@ export class CameraComponent implements OnInit, AfterViewInit {
     score: 0
   }];
 
-  constructor(private storage: AngularFireStorage,
+  // constructor(private storage: AngularFireStorage,
+  //   private employeeService: EmplyoeeService,
+  //   private toastr: ErpService,
+  //   private spinnerService: LoaderService
+  // ) {
+  //   this.employeeService.employeePicClick.subscribe((value: any) => {
+  //     this.loadImageDetection();
+  //   })
+  // }
+  constructor(
+    private cloudinary: CloudinaryService,
     private employeeService: EmplyoeeService,
     private toastr: ErpService,
     private spinnerService: LoaderService
   ) {
     this.employeeService.employeePicClick.subscribe((value: any) => {
       this.loadImageDetection();
-    })
+    });
   }
-
   ngAfterViewInit() {
     this.videoElement = this.video.nativeElement;
   }
@@ -73,29 +83,72 @@ export class CameraComponent implements OnInit, AfterViewInit {
   }
 
 
+  // takePicture() {
+  //   const canvasElement = this.canvas.nativeElement;
+  //   const context = canvasElement.getContext('2d');
+  //   context.drawImage(this.video.nativeElement, 0, 0, canvasElement.width, canvasElement.height);
+  //   const dataUrl = canvasElement.toDataURL('image/jpeg', 1.0);
+  //   const fileName = `image_${new Date().getTime()}.jpg`;
+  //   const filePath = `images/${fileName}`;
+  //   const blob = this.dataURLtoBlob(dataUrl);
+  //   const fileRef = this.storage.ref(filePath);
+  //   const uploadTask = this.storage.upload(filePath, blob);
+  //   uploadTask.snapshotChanges().pipe(
+  //     finalize(async () => {
+  //       try {
+  //         const imageUrl = await fileRef.getDownloadURL().toPromise();
+  //         this.employeeService.employeePicFun(imageUrl);
+  //         console.log('Uploaded Image URL:', imageUrl);
+  //       } catch (error) {
+  //         console.error('Error getting download URL:', error);
+  //       }
+  //     })
+  //   ).subscribe();
+  // }
   takePicture() {
-    const canvasElement = this.canvas.nativeElement;
-    const context = canvasElement.getContext('2d');
-    context.drawImage(this.video.nativeElement, 0, 0, canvasElement.width, canvasElement.height);
-    const dataUrl = canvasElement.toDataURL('image/jpeg', 1.0);
-    const fileName = `image_${new Date().getTime()}.jpg`;
-    const filePath = `images/${fileName}`;
-    const blob = this.dataURLtoBlob(dataUrl);
-    const fileRef = this.storage.ref(filePath);
-    const uploadTask = this.storage.upload(filePath, blob);
-    uploadTask.snapshotChanges().pipe(
-      finalize(async () => {
-        try {
-          const imageUrl = await fileRef.getDownloadURL().toPromise();
-          this.employeeService.employeePicFun(imageUrl);
-          console.log('Uploaded Image URL:', imageUrl);
-        } catch (error) {
-          console.error('Error getting download URL:', error);
-        }
-      })
-    ).subscribe();
-  }
 
+    const canvasElement = this.canvas.nativeElement;
+
+    const context = canvasElement.getContext('2d');
+
+    context.drawImage(
+      this.video.nativeElement,
+      0,
+      0,
+      canvasElement.width,
+      canvasElement.height
+    );
+
+    const dataUrl = canvasElement.toDataURL('image/jpeg', 1.0);
+
+    const blob = this.dataURLtoBlob(dataUrl);
+
+    this.cloudinary.uploadImage(blob).subscribe({
+      next: (response: any) => {
+
+        const imageUrl = response.secure_url;
+
+        console.log('Uploaded Image URL:', imageUrl);
+
+        this.employeeService.employeePicFun(imageUrl);
+
+        this.spinnerService.showHideLoader(false);
+      },
+
+      error: (error) => {
+
+        console.error('Cloudinary Upload Error:', error);
+
+        this.spinnerService.showHideLoader(false);
+
+        this.employeeService.disableEnterBtnFun(false);
+
+        this.toastr.toast.snackbarError(
+          'Image upload failed.'
+        );
+      }
+    });
+  }
 
   dataURLtoBlob(dataUrl: string): Blob {
     const byteString = atob(dataUrl.split(',')[1]);

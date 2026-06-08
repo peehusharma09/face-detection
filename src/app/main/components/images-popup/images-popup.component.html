@@ -1,16 +1,16 @@
 <div class="popup-container">
-    <div class="header">
-      <h2>{{data.name}} ({{data.VID}})</h2>
-    </div>
-  
-    <div class="status-items">
-      <div *ngFor="let item of data.status" class="status-item">
-        <img *ngIf="item.image" [src]="item.image" alt="Status Image">
-        <div class="status">
-          <p>Status: {{ item.status }}</p>
-          <p>Time: {{ item.time | date : "hh:mm a" : 'UTC' }}</p>
-        </div>
+  <div class="header">
+    <h2>{{data.name}} ({{data.VID}})</h2>
+  </div>
+
+  <div class="status-items">
+    <div *ngFor="let item of data.status" class="status-item"
+      [hidden]="item.status === 'lunchIn' || item.status === 'lunchOut'">
+      <img *ngIf="item.image" [src]="item.image" alt="Status Image">
+      <div class="status">
+        <p>Status: {{ item.status }}</p>
+        <p>Time: {{ item.time | date : "hh:mm a" : 'UTC' }}</p>
       </div>
     </div>
   </div>
-  
+</div>

@@ -5,12 +5,14 @@
   padding-top: 8px;
   padding-right: none;
 }
+
 .py-8 {
   padding-top: 8px !important;
   padding-bottom: 8px !important;
-padding-right: 8px !important;
+  padding-right: 8px !important;
   padding-left: 8px !important;
 }
+
 .myx-4 {
   margin-top: 10px !important;
   margin-bottom: 10px !important;
@@ -56,6 +58,12 @@ padding-right: 8px !important;
   // max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+  .img-card {
+    max-width: 100%;
+  }
 }
 
 .emp-icon {

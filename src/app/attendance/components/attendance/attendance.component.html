@@ -1,5 +1,21 @@
-<div *ngIf="isContentVisible; else noAccess" class="px-4 pb-4 attendance-wrapper">
+<!-- <div *ngIf="isContentVisible; else noAccess" class="px-4 pb-4 attendance-wrapper">
   <app-loader></app-loader>
+  
+  <div style="display:flex; gap:12px; padding:12px 16px; background:#fff; z-index:100; position:relative;">
+    <button (click)="activeView = 'angular'" [style.background]="activeView === 'angular' ? '#007bff' : '#ccc'"
+      style="padding:8px 20px; border:none; border-radius:50px; color:white; cursor:pointer;">
+      Add Attendance
+    </button>
+    <button (click)="activeView = 'faceview'" [style.background]="activeView === 'faceview' ? '#007bff' : '#ccc'"
+      style="padding:8px 20px; border:none; border-radius:50px; color:white; cursor:pointer;">
+      Face Attendance
+    </button>
+  </div>
+
+
+
+
+
   <div class="header-wrapper d-flex align-items-center justify-content-between">
     <img class="logo-img" src="../assets/right.png">
     <p class="date-text"> {{ currentDate }} | {{ currentTime }}</p>
@@ -17,6 +33,59 @@
 </div>
 
 <ng-template #noAccess>
-  <!-- Content to show when IP does not match -->
+ 
+  <p>Access Denied: Your IP Address does not have permission to view this page.</p>
+</ng-template> -->
+<div *ngIf="isContentVisible; else noAccess">
+  <app-loader></app-loader>
+
+  <!-- 2 toggle buttons -->
+  <!-- <div style="display:flex; gap:12px; padding:12px 16px; background:#fff; z-index:100; position:relative;">
+    <button (click)="activeView = 'angular'" [style.background]="activeView === 'angular' ? '#007bff' : '#ccc'"
+      style="padding:8px 20px; border:none; border-radius:50px; color:white; cursor:pointer;">
+      Add Attendance
+    </button>
+    <button (click)="activeView = 'faceview'" [style.background]="activeView === 'faceview' ? '#007bff' : '#ccc'"
+      style="padding:8px 20px; border:none; border-radius:50px; color:white; cursor:pointer;">
+      Face Attendance
+    </button>
+  </div> -->
+  <!-- <div style="display:flex; gap:12px; padding:12px 16px; background:#fff;">
+
+   
+    <button *ngIf="attendanceType === 'manual'" (click)="activeView = 'angular'"
+      style="padding:8px 20px; border:none; border-radius:50px; color:white; background:#007bff;">
+      Add Atssstendance
+    </button>
+
+    <button *ngIf="attendanceType === 'facial'" (click)="activeView = 'faceview'"
+      style="padding:8px 20px; border:none; border-radius:50px; color:white; background:#007bff;">
+      Face Attendance
+    </button>
+
+  </div> -->
+
+  <!-- Button 1: existing Angular view (unchanged) -->
+  <div *ngIf="activeView === 'angular'" class="px-4 pb-4 attendance-wrapper">
+    <div class="header-wrapper d-flex align-items-center justify-content-between">
+      <img class="logo-img" [src]="logoUrl " />
+      <p class="date-text">{{ currentDate }} | {{ currentTime }}</p>
+    </div>
+    <div class="capture-wrapper pnn-4 card-body shadow rounded bg-white gap-4 d-flex">
+      <div class="w-50"><app-camera></app-camera></div>
+      <div class="w-50"><app-employee-details></app-employee-details></div>
+    </div>
+    <app-employee-attendance></app-employee-attendance>
+    <p class="copyright">Copyright © {{ getCurrentYear() }} PayraBook All Rights Reserved.</p>
+  </div>
+
+  <!-- Button 2: Python-style fullscreen face view -->
+  <div *ngIf="activeView === 'faceview'">
+    <app-face-view></app-face-view>
+  </div>
+
+</div>
+
+<ng-template #noAccess>
   <p>Access Denied: Your IP Address does not have permission to view this page.</p>
 </ng-template>

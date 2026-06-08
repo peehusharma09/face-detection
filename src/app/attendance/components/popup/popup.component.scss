@@ -2,22 +2,31 @@
   display: flex;
   align-items: start;
 }
+
 .emp-img {
-  width: 500px; /* Adjust as needed */
-  height: 371px; /* Adjust as needed */
-  border-radius: 10px; /* Makes the image round */
-  margin-right: 20px; /* Adds space between image and details */
-  @media screen  and (min-width:767px)   and (max-width:992px){
+  width: 500px;
+  /* Adjust as needed */
+  height: 371px;
+  /* Adjust as needed */
+  border-radius: 10px;
+  /* Makes the image round */
+  margin-right: 20px;
+
+  /* Adds space between image and details */
+  @media screen and (min-width:767px) and (max-width:992px) {
     width: 304px;
     height: 342px;
     border-radius: 10px;
     margin-right: 20px;
   }
 }
+
 .popup-container .details {
-  font-family: Arial, sans-serif; /* Use your preferred font */
+  font-family: Arial, sans-serif;
+  /* Use your preferred font */
 }
-.confirm-button{
+
+.confirm-button {
   border: none;
   background-color: #000000;
   color: #fff;
@@ -27,35 +36,133 @@
   font-weight: 500;
   font-family: "Poppins", sans-serif !important;
 }
-.cancel-button{
+
+.cancel-button {
   border: 1px solid #000000;
-color: #000000;
- background-color: #fff;
+  color: #000000;
+  background-color: #fff;
   border-radius: 5px;
   padding: 7px 30px;
   font-weight: 500;
   font-family: "Poppins", sans-serif !important;
 }
-.icon-img{
+
+.icon-img {
   width: 22px;
 }
-.time-text{
+
+.time-text {
   color: #000000;
   font-size: 18px;
   font-weight: 500;
   margin: 0;
   font-family: "Poppins", sans-serif !important;
 }
-.label-text{
+
+.label-text {
   color: #505050;
   font-size: 18px;
   margin: 0;
   font-family: "Poppins", sans-serif !important;
 }
 
-.buttons{
+.buttons {
   height: 53px;
   width: 170px;
   font-size: 20px;
   font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .popup-row {
+    // wrapper holding camera + form (replace with real class)
+    flex-direction: column;
+  }
+
+  .popup-image {
+    // camera block (replace with real class)
+    width: 100%;
+    margin-bottom: 16px;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .popup-form {
+    // the <app-employee-details> wrapper (replace with real class)
+    width: 100%;
+  }
+}
+
+/* ===== MOBILE RESPONSIVE (≤767px) — desktop untouched ===== */
+@media (max-width: 767px) {
+
+  /* Stack image on top, details below */
+  .popup-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.25rem !important;
+  }
+
+  /* Image full width on top */
+  .emp-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-bottom: 24px;
+    border-radius: 10px;
+  }
+
+  /* Details take full width */
+  .details.w-50 {
+    width: 100% !important;
+  }
+
+  /* 2-column grid for the detail rows */
+  .details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    row-gap: 22px;
+  }
+
+  /* Each detail row sits in the grid; reset bottom margin */
+  .details .d-flex.mb-4 {
+    margin-bottom: 0 !important;
+    align-items: center;
+  }
+
+  /* Buttons row spans both columns */
+  .buttons {
+    grid-column: 1 / -1;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 1rem !important;
+    display: flex;
+    gap: 16px;
+  }
+
+  .confirm-button,
+  .cancel-button {
+    flex: 1;
+    padding: 14px 20px;
+    margin-right: 0;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .icon-img {
+    width: 18px;
+  }
+
+  .time-text {
+    font-size: 14px;
+  }
+
+  .label-text {
+    font-size: 14px;
+  }
 }

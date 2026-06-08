@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { environment } from './environments/environment';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoaderComponent } from './components/loader/loader.component';
+import { FaceViewComponent } from './components/face-view/face-view.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     EmployeeDetailsComponent,
     EmployeeAttendanceComponent,
     LoaderComponent,
+    FaceViewComponent,
   ],
   imports: [
     CommonModule,

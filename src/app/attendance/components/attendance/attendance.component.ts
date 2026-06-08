@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { IpService } from '../../service/ip.service';
 import { ErpService } from 'src/app/services/erp.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-attendance',
@@ -14,15 +15,18 @@ export class AttendanceComponent {
   currentTime: any;
   ipAddress: string | undefined;
   isContentVisible: boolean = true;
-  
-  constructor(private datePipe: DatePipe, 
+  activeView: 'angular' | 'faceview' = 'angular';
+  attendanceType: string = 'manual';
+  logoUrl: string = '';
+  constructor(private datePipe: DatePipe,
     private ipService: IpService,
     private toastr: ErpService,
+    private http: HttpClient,
   ) {
     this.ipService.getIpAddress().subscribe(
       (response) => {
         this.ipAddress = response.ip;
-        if( this.ipAddress == "106.201.206.165" ||  this.ipAddress == "124.123.76.210"){
+        if (this.ipAddress == "106.201.206.165" || this.ipAddress == "124.123.76.210") {
           console.log("Current IP Address", this.ipAddress)
           this.isContentVisible = true;
         } else {
@@ -41,13 +45,66 @@ export class AttendanceComponent {
     setInterval(() => {
       this.updateTime();
     }, 1000);
+
+    this.getAttendanceMode();
   }
 
   getCurrentYear(): number {
     return new Date().getFullYear();
   }
+  ngOnInit() {
 
+    this.getSystemLogo();
+  }
   updateTime() {
     this.currentTime = this.datePipe.transform(new Date(), 'shortTime');
+  }
+  getSystemLogo() {
+    this.http.get<any>('https://erp-backend-y4l2.onrender.com/api/getAllSystemSettings')
+      .subscribe({
+        next: (res) => {
+          if (res?.data?.logo) {
+            this.logoUrl = res.data.logo;
+          }
+        },
+        error: (err) => {
+          console.error('Logo API Error', err);
+        }
+      });
+  }
+  getAttendanceMode() {
+
+    this.http
+      .get<any>('https://erp-backend-y4l2.onrender.com/api/getAttendanceMode')
+      .subscribe({
+
+        next: (res) => {
+
+          this.attendanceType =
+            res?.data?.attendanceType || 'manual';
+
+          if (this.attendanceType === 'facial') {
+
+            this.activeView = 'faceview';
+
+          } else {
+
+            this.activeView = 'angular';
+
+          }
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          this.attendanceType = 'manual';
+          this.activeView = 'angular';
+
+        }
+
+      });
+
   }
 }

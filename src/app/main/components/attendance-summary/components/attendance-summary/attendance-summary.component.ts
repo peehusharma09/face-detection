@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatePipe} from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -44,7 +44,7 @@ export const MY_FORMATS = {
   ],
 })
 export class AttendanceSummaryComponent {
-  showInfo : boolean = false;
+  showInfo: boolean = false;
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = [
     'date',
@@ -52,8 +52,6 @@ export class AttendanceSummaryComponent {
     'name',
     'In',
     'Out',
-    'lunchIn',
-    'lunchOut',
     'breakIn',
     'breakOut',
     'total',
@@ -73,7 +71,7 @@ export class AttendanceSummaryComponent {
   enddate: any;
   userData: any = localStorage.getItem('userInfo');
   userInfo: any;
-  timer:any;
+  timer: any;
   constructor(
     private employeeService: EmplyoeeService,
     private datePipe: DatePipe,
@@ -95,21 +93,23 @@ export class AttendanceSummaryComponent {
     this.enddate = lastDateOfMonth;
     this.selectrange(firstDateOfMonth, lastDateOfMonth);
   }
-
+  ngOnInit() {
+    this.getSystemSettings();
+  }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  debounce(func:Function, timeout:number = 500){
+  debounce(func: Function, timeout: number = 500) {
     clearTimeout(this.timer);
 
     this.timer = setTimeout(() => { func.apply(this); }, timeout);
   }
 
-  debounceSet(){
-    ;    this.debounce(() => this.Search());
-      }
+  debounceSet() {
+    ; this.debounce(() => this.Search());
+  }
 
   Search() {
     this.employeeService.findEmployeeDetailByFilterByName(
@@ -118,7 +118,7 @@ export class AttendanceSummaryComponent {
       this.listDate = res;
       this.dataSource.data = res;
       this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+      this.dataSource.sort = this.sort;
       console.log(this.listDate, '----', this.dataSource.data);
     });
   }
@@ -129,7 +129,7 @@ export class AttendanceSummaryComponent {
   }
 
   convertToCSV(data: any[]): string {
-    const header = ['image','Employee Id', 'Employee Name', 'Status', 'Date', 'Time'];
+    const header = ['image', 'Employee Id', 'Employee Name', 'Status', 'Date', 'Time'];
     const csvRows = [];
     csvRows.push(header.join(','));
     data.forEach((row: any) => {
@@ -145,6 +145,30 @@ export class AttendanceSummaryComponent {
     });
 
     return csvRows.join('\n');
+  }
+  requiredWorkingHours: number = 0;
+  getSystemSettings() {
+    this.employeeService.getAllSystemSettings().subscribe(
+      (res: any) => {
+        if (res?.success) {
+          this.requiredWorkingHours = res.data.workHours;
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+  getAttendanceStatus(element: any): boolean {
+
+    // If employee has not punched out yet
+    if (!element?.Out?.time) {
+      return false;
+    }
+
+    const totalHours = Number(element?.totalHour || 0);
+
+    return totalHours >= this.requiredWorkingHours;
   }
 
   formatDate(date: string): string {
@@ -172,21 +196,21 @@ export class AttendanceSummaryComponent {
       formattedEndDate
     ).subscribe((filteredData: any) => {
       this.dataSource.data = filteredData;
-    this.dataSource.sort = this.sort;
+      this.dataSource.sort = this.sort;
     });
   }
 
-  
-  openPopup(id:any): void {
+
+  openPopup(id: any): void {
     this.employeeService.getEmployeeById(id).subscribe(
       (response: any) => {
         const dialogRef = this.dialog.open(ImagesPopupComponent, {
           width: '1000px',
           maxWidth: '89vw',
-          data: {...response},
-          disableClose: false 
+          data: { ...response },
+          disableClose: false
         });
-      
+
         dialogRef.afterClosed().subscribe(result => {
           if (result && result.confirmed === true) {
             // this.save();

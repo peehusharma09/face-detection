@@ -1,0 +1,197 @@
+.fv-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+.fv-logo {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 150px;
+    height: auto;
+    z-index: 99;
+}
+
+.fv-camera {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Attendance panel */
+.fv-attendance-panel {
+    display: none;
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    right: 0;
+    padding: 0 16px;
+    z-index: 50;
+
+    &.visible {
+        display: block;
+    }
+}
+
+.fv-cards-row {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 4px;
+    }
+}
+
+.fv-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 8px 12px 8px 8px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px;
+    min-width: 380px;
+    max-width: 420px;
+    flex-shrink: 0;
+}
+
+.fv-card-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    object-fit: cover;
+}
+
+.fv-card-info {
+    h4 {
+        margin: 0 0 4px;
+        color: #007bff;
+        font-size: 14px;
+    }
+}
+
+.fv-card-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    font-size: 11px;
+    color: #555;
+
+    p {
+        margin: 2px 0;
+
+        span {
+            font-weight: bold;
+            color: #333;
+        }
+    }
+}
+
+/* Bottom bar */
+.fv-bottom-bar {
+    position: absolute;
+    bottom: 16px;
+    left: 4%;
+    width: 92%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.fv-btn-show {
+    padding: 8px 13px;
+    background: rgba(79, 67, 67, 0.85);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    border-radius: 50px;
+
+    &:hover {
+        background: rgba(80, 80, 80, 0.95);
+    }
+}
+
+.fv-btn-capture {
+    width: 50px;
+    height: 50px;
+    background: white;
+
+    cursor: pointer;
+
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s;
+
+    &:hover:not(:disabled) {
+        transform: scale(1.05);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+/* Loading overlay */
+.fv-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.fv-spinner-text {
+    font-size: 1.5rem;
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* Popups */
+.fv-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    max-width: 80vw;
+}
+
+.fv-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.fv-error {
+    background: #f8d7da;
+    color: #721c24;
+}

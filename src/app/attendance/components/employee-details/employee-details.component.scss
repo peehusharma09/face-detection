@@ -9,35 +9,40 @@ label {
 //   flex-direction: row;
 //   align-items: center; 
 // }
- .helight {
- border: 1px solid red !important;
+.helight {
+  border: 1px solid red !important;
 }
+
 .validationMessage {
   color: red;
   font-size: 14px;
-  
+
 }
-.label-value{
+
+.label-value {
   font-size: 17px;
   padding-top: 2px;
+  white-space: nowrap;
+
 }
 
 .numeric-keyboard {
   display: flex;
   flex-direction: column;
-  
+
   border-radius: 5px;
-  
+
   margin-left: 80px;
 }
 
 .row {
   display: flex;
+
   button:hover {
     background-color: #fa757a;
     color: #fff;
     border: 1px solid #000;
-}  
+  }
 }
 
 button {
@@ -60,40 +65,47 @@ button:hover {
 }
 
 .enter {
- color: #ffffff; 
- background-color: #262626;
- :hover{
-  background-color: #5a5a5a !important;
- }
+  color: #ffffff;
+  background-color: #262626;
+
+  :hover {
+    background-color: #5a5a5a !important;
+  }
 }
 
-button{
+button {
   border: 1px solid #e3e0e0;
 }
-.emp-label{
+
+.emp-label {
   white-space: nowrap;
   margin-right: 10px;
 }
-.status-wrapper{
-display: flex;
+
+.status-wrapper {
+  display: flex;
   align-items: start;
-  gap: 15px;
-  .status-text{
+  gap: 10px;
+  margin-bottom: 10px;
+
+  .status-text {
     font-size: 15px;
     color: #444444;
   }
 }
-.id-wrapper{
-  .id-input{
-  border-radius: 0px 5px 5px 0px !important;
-  height: 35px;
-  padding-left: 10px;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: 13px;
-  padding: 22px;
-  width: 100%;
-  border: 1px solid #e0e0e0;;
+
+.id-wrapper {
+  .id-input {
+    border-radius: 0px 5px 5px 0px !important;
+    height: 35px;
+    padding-left: 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 22px;
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    ;
   }
 }
 
@@ -102,13 +114,11 @@ display: flex;
   flex-direction: column;
 }
 
-.radio-options input[type="radio"] {
-  
-}
+.radio-options input[type="radio"] {}
 
 .radio-options label {
- 
-  margin-bottom: 5px; 
+
+  margin-bottom: 5px;
 }
 
 .status {
@@ -116,31 +126,39 @@ display: flex;
   font-weight: 600;
   color: grey;
 }
-.employee-vid{
-    margin-left: 15px;
-    padding: 11px;
-    background-color: #cfcdcd;
-    border-radius: 5px 0px 0px 5px;
-    font-weight: 600;
+
+.employee-vid {
+  margin-left: 15px;
+  padding: 11px;
+  background-color: #cfcdcd;
+  border-radius: 5px 0px 0px 5px;
+  font-weight: 600;
 }
 
 .id-input {
-  
-  border: 1px solid #ccc; 
-  background-color: #f9f9f9; 
-  color: #555; 
-  cursor: default; 
+
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #555;
+  cursor: default;
 }
 
 .flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between; 
+  display: grid;
+  grid-template-columns: 180px 180px;
+  column-gap: 120px;
+  row-gap: 15px;
 }
 
 .flex-item {
-  flex-basis: calc(50% - 10px);
-  margin-bottom: 15px; 
+  display: flex;
+  align-items: center;
+}
+
+.label-value {
+  font-size: 17px;
+  margin-left: 8px;
+  white-space: nowrap;
 }
 
 @media (min-width: 768px) {
@@ -149,5 +167,40 @@ display: flex;
   }
 }
 
+/* ===== MOBILE RESPONSIVE (≤767px) — desktop untouched ===== */
+/* ===== MOBILE RESPONSIVE (≤767px) — desktop untouched ===== */
+@media (max-width: 767px) {
 
+  /* Keypad fills width, no left offset */
+  .numeric-keyboard {
+    margin-left: 0;
+    width: 100%;
+    max-width: 360px;
+    /* keeps keys from stretching too wide */
+    margin-right: auto;
+    margin-left: auto;
+  }
 
+  /* EMP ID input fills remaining space */
+  .id-wrapper .id-input {
+    padding: 18px 12px;
+    width: 100%;
+  }
+
+  /* Status: 2 fluid columns like the reference */
+  .flex-container {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 14px;
+  }
+
+  .label-value {
+    font-size: 15px;
+  }
+
+  /* Larger touch targets */
+  .numeric-keyboard button {
+    padding: 14px;
+    font-size: 17px;
+  }
+}

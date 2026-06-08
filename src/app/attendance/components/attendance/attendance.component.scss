@@ -2,6 +2,7 @@
   max-width: 50%;
   flex: 0 0 50%;
 }
+
 p.copyright {
   text-align: center;
   font-size: 12px;
@@ -11,8 +12,10 @@ p.copyright {
   .logo-img {
     max-width: 200px;
     width: 100%;
+
   }
 }
+
 .pnn-4 {
   padding: 1rem !important;
 }
@@ -20,6 +23,7 @@ p.copyright {
 .capture-wrapper {
   display: flex;
   align-items: start;
+  margin-top: 0;
 }
 
 .date-text {
@@ -34,4 +38,47 @@ p.copyright {
 
 .attendance-wrapper {
   background: #f0eef9;
+}
+
+/* ===== MOBILE RESPONSIVE (≤767px) — desktop untouched ===== */
+@media (max-width: 767px) {
+
+  /* Stack camera (top) and details (bottom) into 2 rows */
+  .capture-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Both columns go full width */
+  .capture-wrapper .w-50 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* Camera no longer capped at 50% */
+  .app-camera {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+
+  /* Header logo + date stack nicely on small screens */
+  .header-wrapper {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-wrapper .logo-img {
+    max-width: 150px;
+  }
+
+  .date-text {
+    font-size: 13px;
+  }
+
+  /* Reduce wrapper padding so the card fits narrow screens */
+  .attendance-wrapper {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
 }
