@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
+//new
 export class EmplyoeeService {
   // ApiPath: any = 'http://localhost:8093/api/'
   ApiPath: any = 'https://entry-systemapinew.onrender.com/api/'
