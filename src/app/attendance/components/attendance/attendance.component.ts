@@ -60,7 +60,7 @@ export class AttendanceComponent {
     this.currentTime = this.datePipe.transform(new Date(), 'shortTime');
   }
   getSystemLogo() {
-    this.http.get<any>('https://erp-backend-y4l2.onrender.com/api/getAllSystemSettings')
+    this.http.get<any>('https://erp-backend-y4l2.onrender.com/getAllSystemSettings')
       .subscribe({
         next: (res) => {
           if (res?.data?.logo) {

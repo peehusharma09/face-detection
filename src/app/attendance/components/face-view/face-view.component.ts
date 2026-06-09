@@ -51,7 +51,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setupVoiceRecognition();
     }
     getSystemLogo() {
-        this.http.get<any>('http://localhost:8085/api/getAllSystemSettings')
+        this.http.get<any>('https://erp-backend-y4l2.onrender.com/getAllSystemSettings')
             .subscribe({
                 next: (res) => {
                     if (res?.data?.logo) {

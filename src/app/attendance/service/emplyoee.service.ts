@@ -140,7 +140,7 @@ export class EmplyoeeService {
   }
   getAllSystemSettings() {
     return this.http.get(
-      'https://erp-backend-y4l2.onrender.com/api/getAllSystemSettings'
+      'https://erp-backend-y4l2.onrender.com/getAllSystemSettings'
     );
   }
 }
