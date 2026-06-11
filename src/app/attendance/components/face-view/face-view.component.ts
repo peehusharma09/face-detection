@@ -5,6 +5,7 @@ import { LoaderService } from '../loader/loader.service';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import '@tensorflow/tfjs';
 import { HttpClient } from '@angular/common/http';
+
 const CLOUDINARY_CLOUD_NAME = 'dbly8fcvj';
 const CLOUDINARY_UPLOAD_PRESET = 'face_attendence';
 
@@ -50,6 +51,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.setupVoiceRecognition();
     }
+
     getSystemLogo() {
         this.http.get<any>('https://erp-backend-y4l2.onrender.com/getAllSystemSettings')
             .subscribe({
@@ -63,6 +65,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             });
     }
+
     ngOnDestroy() {
         this.mediaStream?.getTracks().forEach(t => t.stop());
         this.recognition?.stop();
@@ -76,6 +79,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
             this.toggleAttendance();
         }
     }
+
     toggleAttendance() {
         this.showAttendance = !this.showAttendance;
         if (this.showAttendance) this.fetchAttendanceData();
@@ -84,7 +88,6 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     async captureAndSubmit() {
         if (this.isLoading) return;
         this.isLoading = true;
-        this.spinner.showHideLoader(true);
         this.successMessage = '';
         this.errorMessage = '';
 
@@ -94,24 +97,18 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!predictions.some((p: any) => p.class === 'person')) {
                 this.showError('No person detected. Please stand in front of the camera.');
                 this.speak('No person detected. Please stand in front of the camera.');
+                this.isLoading = false;
                 return;
             }
 
             const imageUrl = await this.captureAndUpload();
-
             const localTime = new Date().toISOString();
-            console.log('Sending payload:', {
-                imageUrl,
-                localTime
-            });
+            
+            console.log('Sending payload:', { imageUrl, localTime });
+            console.log('API URL:', `${this.employeeService.ApiPath}faceAttendance`);
 
-            console.log(
-                'API URL:',
-                `${this.employeeService.ApiPath}faceAttendance`
-            );
             this.employeeService.faceAttendance({ imageUrl, localTime }).subscribe(
                 (response: any) => {
-                    this.spinner.showHideLoader(false);
                     this.isLoading = false;
                     const msg = `Hello ${response.username}, Your ${response.action}!`;
                     this.showSuccess(msg);
@@ -119,14 +116,14 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.fetchAttendanceData();
                 },
                 (error: any) => {
-                    this.spinner.showHideLoader(false);
                     this.isLoading = false;
-                    const msg = error?.error?.message || 'Faceee not recognized. Please try again.';
+                    const msg = error?.error?.message || 'Face not recognized. Please try again.';
                     this.showError(msg);
                     this.speak(msg);
                 }
             );
-        } catch {
+        } catch (error) {
+            this.isLoading = false;
             this.showError('An error occurred. Please try again.');
             this.speak('An error occurred. Please try again.');
         }
@@ -166,9 +163,9 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
             () => { }
         );
     }
+
     formatTime(time: any): string {
         if (!time) return 'N/A';
-
         return new Date(time).toLocaleTimeString('en-IN', {
             hour: '2-digit',
             minute: '2-digit',
@@ -176,9 +173,9 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
             timeZone: 'Asia/Kolkata'
         });
     }
+
     getBreakTimes(breaks: any[]): string {
         if (!breaks?.length) return 'N/A';
-
         return breaks
             .map(b =>
                 new Date(b.time).toLocaleTimeString('en-IN', {
@@ -190,7 +187,6 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
             )
             .join(', ');
     }
-
 
     getLatestImage(record: any): string {
         const events: { time: string; image: string }[] = [];
@@ -216,14 +212,12 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.successMessage = msg;
         setTimeout(() => {
             this.successMessage = '';
-            this.spinner.showHideLoader(false);
         }, 4000);
     }
 
     private showError(msg: string) {
         this.errorMessage = msg;
         this.isLoading = false;
-        this.spinner.showHideLoader(false);
         setTimeout(() => this.errorMessage = '', 4000);
     }
 
@@ -271,7 +265,13 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this.recognition.onerror = (event: any) => console.error('Speech error:', event.error);
-        this.recognition.onend = () => { try { this.recognition?.start(); } catch { } };
+        this.recognition.onend = () => { 
+            try { 
+                this.recognition?.start(); 
+            } catch { 
+                // Handle error silently
+            } 
+        };
         this.recognition.start();
     }
 }

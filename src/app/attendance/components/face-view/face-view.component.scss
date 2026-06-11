@@ -14,12 +14,194 @@
     max-width: 150px;
     height: auto;
     z-index: 99;
+    transition: all 0.3s ease;
 }
 
 .fv-camera {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Clean Face Detection Loader - Transparent background, only blue elements */
+.fv-heartbeat-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 30px 40px;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    min-width: 280px;
+}
+
+/* Scanning line animation */
+.scanning-line-container {
+    width: 260px;
+    position: relative;
+}
+
+.scanning-line {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        #0096ff 20%,
+        #00ccff 50%,
+        #0096ff 80%,
+        transparent 100%
+    );
+    animation: scanMove 1.5s ease-in-out infinite;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+}
+
+@keyframes scanMove {
+    0% {
+        transform: translateY(-60px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(60px);
+        opacity: 0;
+    }
+}
+
+/* Face detection frame - just blue border */
+.face-frame {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #0096ff;
+    border-radius: 12px;
+    position: relative;
+    animation: pulseFrame 1.5s ease-in-out infinite;
+    background: transparent;
+}
+
+.face-frame::before,
+.face-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: #0096ff;
+    border-style: solid;
+    background: transparent;
+}
+
+.face-frame::before {
+    top: -2px;
+    left: -2px;
+    border-width: 3px 0 0 3px;
+}
+
+.face-frame::after {
+    top: -2px;
+    right: -2px;
+    border-width: 3px 3px 0 0;
+}
+
+.face-frame .corner-bottom-left {
+    position: absolute;
+    bottom: -2px;
+    left: -2px;
+    width: 20px;
+    height: 20px;
+    border-width: 0 0 3px 3px;
+    border-style: solid;
+    border-color: #0096ff;
+    background: transparent;
+}
+
+.face-frame .corner-bottom-right {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border-width: 0 3px 3px 0;
+    border-style: solid;
+    border-color: #0096ff;
+    background: transparent;
+}
+
+@keyframes pulseFrame {
+    0%, 100% {
+        border-color: #0096ff;
+        box-shadow: 0 0 0 0 rgba(0, 150, 255, 0.2);
+    }
+    50% {
+        border-color: #00ccff;
+        box-shadow: 0 0 20px 5px rgba(0, 150, 255, 0.3);
+    }
+}
+
+/* Loading text - clean blue */
+.loading-text {
+    color: #0096ff;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: textPulse 1.5s ease-in-out infinite;
+    font-family: monospace;
+    background: transparent;
+    text-shadow: none;
+}
+
+@keyframes textPulse {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 5px #0096ff;
+    }
+}
+
+.loading-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.loading-dots span {
+    animation: dots 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dots {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+    }
 }
 
 /* Attendance panel */
@@ -31,10 +213,10 @@
     right: 0;
     padding: 0 16px;
     z-index: 50;
+}
 
-    &.visible {
-        display: block;
-    }
+.fv-attendance-panel.visible {
+    display: block;
 }
 
 .fv-cards-row {
@@ -42,15 +224,20 @@
     gap: 20px;
     overflow-x: auto;
     padding-bottom: 8px;
+}
 
-    &::-webkit-scrollbar {
-        height: 4px;
-    }
+.fv-cards-row::-webkit-scrollbar {
+    height: 4px;
+}
 
-    &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.4);
-        border-radius: 4px;
-    }
+.fv-cards-row::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.fv-cards-row::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
 }
 
 .fv-card {
@@ -75,29 +262,29 @@
     object-fit: cover;
 }
 
-.fv-card-info {
-    h4 {
-        margin: 0 0 4px;
-        color: #007bff;
-        font-size: 14px;
-    }
+.fv-card-info h4 {
+    margin: 0 0 4px;
+    color: #007bff;
+    font-size: 14px;
 }
 
+/* UPDATED: fv-card-details text - bold and larger font size */
 .fv-card-details {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2px;
-    font-size: 11px;
+    font-size: 12px;  /* Increased from 11px to 12px */
     color: #555;
+    font-weight: bold;  /* Make all text bold */
+}
 
-    p {
-        margin: 2px 0;
+.fv-card-details p {
+    margin: 2px 0;
+}
 
-        span {
-            font-weight: bold;
-            color: #333;
-        }
-    }
+.fv-card-details p span {
+    font-weight: bold;
+    color: #333;
 }
 
 /* Bottom bar */
@@ -120,54 +307,72 @@
     font-size: 16px;
     color: rgb(255, 255, 255);
     border-radius: 50px;
+    transition: all 0.2s ease;
+}
 
-    &:hover {
-        background: rgba(80, 80, 80, 0.95);
-    }
+.fv-btn-show:hover {
+    background: rgba(80, 80, 80, 0.95);
+    transform: scale(1.02);
 }
 
 .fv-btn-capture {
     width: 50px;
     height: 50px;
     background: white;
-
     cursor: pointer;
-
     font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.1s;
-
-    &:hover:not(:disabled) {
-        transform: scale(1.05);
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
+    border: none;
+    border-radius: 50%;
 }
 
-/* Loading overlay */
-.fv-loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.3);
-    display: flex;
-    justify-content: center;
+.fv-btn-capture:hover:not(:disabled) {
+    transform: scale(1.05);
+}
+
+.fv-btn-capture:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Camera button - TOP RIGHT (visible only on mobile) */
+.fv-btn-capture-top {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    transition: all 0.2s ease;
+    padding: 0;
     align-items: center;
-    z-index: 1000;
+    justify-content: center;
 }
 
-.fv-spinner-text {
-    font-size: 1.5rem;
-    color: #007bff;
-    font-weight: 600;
+.fv-btn-capture-top img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.fv-btn-capture-top:active {
+    transform: scale(0.95);
+}
+
+.fv-btn-capture-top:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Popups */
@@ -184,6 +389,27 @@
     font-size: 16px;
     font-weight: 500;
     max-width: 80vw;
+    animation: fadeInOut 2.5s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    15% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    85% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+        visibility: hidden;
+    }
 }
 
 .fv-success {
@@ -194,4 +420,282 @@
 .fv-error {
     background: #f8d7da;
     color: #721c24;
+}
+
+/* Desktop view */
+@media (min-width: 769px) {
+    .fv-btn-capture-top {
+        display: none !important;
+    }
+    
+    .fv-btn-capture-desktop {
+        display: flex !important;
+    }
+}
+
+/* Mobile Responsive - IMPROVED CARDS */
+@media (max-width: 768px) {
+    .fv-logo {
+        max-width: 180px !important;
+        top: 16px;
+    }
+    
+    .fv-btn-capture-desktop {
+        display: none !important;
+    }
+    
+    .fv-btn-capture-top {
+        display: flex !important;
+        width: 52px;
+        height: 52px;
+        top: 16px;
+        right: 16px;
+    }
+    
+    .fv-btn-capture-top img {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .fv-bottom-bar {
+        justify-content: center;
+        bottom: 24px;
+    }
+    
+    .fv-btn-show {
+        padding: 14px 32px;
+        font-size: 16px;
+        min-width: 200px;
+        background: rgba(30, 30, 40, 0.95);
+        backdrop-filter: blur(8px);
+        font-weight: 500;
+    }
+    
+    /* Mobile loader adjustments - keep transparent */
+    .fv-heartbeat-loader {
+        padding: 25px 35px;
+        min-width: 240px;
+        background: transparent;
+    }
+    
+    .scanning-line-container {
+        width: 220px;
+    }
+    
+    .face-frame {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .loading-text {
+        font-size: 14px;
+    }
+    
+    .fv-attendance-panel.visible {
+        transform: translateY(0);
+        display: block;
+    }
+    
+    .fv-cards-row {
+        gap: 12px;
+        padding: 8px 16px 20px 16px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* IMPROVED MOBILE CARD DESIGN */
+    .fv-card {
+        min-width: 85vw;
+        max-width: 85vw;
+        width: 85vw;
+        border-radius: 0px !important;
+        padding: 8px 12px;
+        grid-template-columns: 64px 1fr;
+        gap: 12px;
+        scroll-snap-align: start;
+        background: rgba(255, 255, 255, 0.98);
+        height: auto;
+        min-height: 70px;
+    }
+    
+    .fv-card-img {
+        width: 64px !important;
+        height: 64px !important;
+        border-width: 2.5px;
+    }
+    
+    .fv-card-info h4 {
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+    
+    /* Mobile fv-card-details - bold and larger */
+    .fv-card-details {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px 8px;
+        font-size: 11px;  /* Increased from 10px to 11px */
+        font-weight: bold;
+    }
+    
+    .fv-card-details p {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 3px;
+        margin: 0;
+        line-height: 1.3;
+    }
+    
+    .fv-card-details p span {
+        min-width: 32px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    
+    .fv-popup {
+        padding: 12px 20px;
+        font-size: 14px;
+        max-width: 85vw;
+        border-radius: 12px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .fv-logo {
+        max-width: 160px !important;
+        top: 12px;
+    }
+    
+    .fv-btn-show {
+        padding: 12px 24px;
+        font-size: 14px;
+        min-width: 170px;
+    }
+    
+    .fv-btn-capture-top {
+        width: 48px;
+        height: 48px;
+        top: 12px;
+        right: 12px;
+    }
+    
+    .fv-btn-capture-top img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .fv-heartbeat-loader {
+        padding: 20px 25px;
+        min-width: 200px;
+        background: transparent;
+    }
+    
+    .scanning-line-container {
+        width: 180px;
+    }
+    
+    .face-frame {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .loading-text {
+        font-size: 12px;
+    }
+    
+    /* Small mobile cards - even more compact */
+    .fv-card {
+        min-width: 90vw;
+        max-width: 90vw;
+        width: 90vw;
+        padding: 6px 10px;
+        grid-template-columns: 56px 1fr;
+        gap: 40px;
+        min-height: 65px;
+    }
+    
+    .fv-card-img {
+        width: 56px !important;
+        height: 56px !important;
+    }
+    
+    .fv-card-info h4 {
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+    
+    /* Small mobile fv-card-details */
+    .fv-card-details {
+        grid-template-columns: 1fr;
+        gap: 3px;
+        font-size: 10px;  /* Increased from 9px to 10px */
+        font-weight: bold;
+    }
+    
+    .fv-card-details p span {
+        min-width: 30px;
+        font-size: 10px;
+        font-weight: bold;
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .fv-attendance-panel {
+        max-height: 80vh;
+    }
+    
+    .fv-bottom-bar {
+        bottom: 12px;
+    }
+    
+    .fv-heartbeat-loader {
+        padding: 15px 25px;
+        background: transparent;
+    }
+    
+    .face-frame {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .fv-logo {
+        max-width: 140px !important;
+        top: 8px;
+    }
+    
+    /* Landscape cards */
+    .fv-card {
+        min-width: 75vw;
+        max-width: 75vw;
+        width: 75vw;
+        grid-template-columns: 56px 1fr;
+        padding: 6px 10px;
+    }
+    
+    .fv-card-img {
+        width: 56px !important;
+        height: 56px !important;
+    }
+    
+    .fv-card-details {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3px 6px;
+        font-size: 10px;
+        font-weight: bold;
+    }
+}
+
+/* Tablet devices */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .fv-logo {
+        max-width: 200px;
+    }
+    
+    .fv-btn-show {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
 }
