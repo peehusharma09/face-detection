@@ -3,12 +3,6 @@
     <!-- Logo centered at top -->
     <img class="fv-logo" [src]="logoUrl" alt="Company Logo" />
 
-    <!-- Camera button - top right (mobile only) -->
-    <button class="fv-btn-capture-top" (click)="captureAndSubmit()" [disabled]="isLoading">
-        <img src="../assets/camera.jpg" alt="Capture" 
-             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23333%22%3E%3Cpath d=%22M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z%22/%3E%3Cpath d=%22M20 6h-3.17L15 4H9L7.17 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h4.05l1.83-2h4.24l1.83 2H20v10z%22/%3E%3C/svg%3E'">
-    </button>
-
     <!-- Full-screen camera feed -->
     <video #video autoplay playsinline class="fv-camera"></video>
     <canvas #canvas style="display:none;"></canvas>
@@ -27,9 +21,8 @@
         </div>
     </div>
 
-    <!-- Attendance panel (slides up from bottom) -->
+    <!-- Attendance panel -->
     <div class="fv-attendance-panel" [class.visible]="showAttendance">
-        <div class="fv-panel-handle" (click)="toggleAttendance()"></div>
         <div class="fv-cards-row">
             <div class="fv-card" *ngFor="let record of attendanceRecords">
                 <img [src]="getLatestImage(record)" class="fv-card-img" alt="employee photo" 
@@ -51,27 +44,18 @@
     <!-- Bottom bar -->
     <div class="fv-bottom-bar">
         <button class="fv-btn-show" (click)="toggleAttendance()">
-            {{ showAttendance ? '⬆️ HIDE ATTENDANCE' : '📋 SHOW ATTENDANCE' }}
+            {{ showAttendance ? '⬆️ HIDE' : '📋 ATTENDANCE' }}
         </button>
-        <button class="fv-btn-capture fv-btn-capture-desktop" (click)="captureAndSubmit()" [disabled]="isLoading">
-            <img src="../assets/camera.jpg" alt="Capture" width="52" height="50"
-                onerror="this.replaceWith(document.createTextNode('📷'))">
+        <button class="fv-btn-capture" (click)="captureAndSubmit()" [disabled]="isLoading">
+            <svg class="camera-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="13" r="4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </button>
     </div>
 
-    <!-- Success popup -->
+    <!-- Popups -->
     <div class="fv-popup fv-success" *ngIf="successMessage">{{ successMessage }}</div>
-
-    <!-- Error popup -->
     <div class="fv-popup fv-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
 </div>
-
-
-
-
-
-
-
-
-
