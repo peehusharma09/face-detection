@@ -104,9 +104,6 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
             const imageUrl = await this.captureAndUpload();
             const localTime = new Date().toISOString();
             
-            console.log('Sending payload:', { imageUrl, localTime });
-            console.log('API URL:', `${this.employeeService.ApiPath}faceAttendance`);
-
             this.employeeService.faceAttendance({ imageUrl, localTime }).subscribe(
                 (response: any) => {
                     this.isLoading = false;
