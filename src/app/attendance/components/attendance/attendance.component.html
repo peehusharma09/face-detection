@@ -66,16 +66,40 @@
   </div> -->
 
   <!-- Button 1: existing Angular view (unchanged) -->
-  <div *ngIf="activeView === 'angular'" class="px-4 pb-4 attendance-wrapper">
+  <div *ngIf="activeView === 'angular'" class="px-4  attendance-wrapper">
     <div class="header-wrapper d-flex align-items-center justify-content-between">
       <img class="logo-img" [src]="logoUrl " />
       <p class="date-text">{{ currentDate }} | {{ currentTime }}</p>
     </div>
     <div class="capture-wrapper pnn-4 card-body shadow rounded bg-white gap-4 d-flex">
-      <div class="w-50"><app-camera></app-camera></div>
-      <div class="w-50"><app-employee-details></app-employee-details></div>
+
+      <!-- Left Side -->
+      <div class="w-50">
+        <app-camera></app-camera>
+      </div>
+
+      <!-- Right Side -->
+      <div class="w-50 details-section">
+
+        <app-employee-details></app-employee-details>
+
+        <div class="attendance-btn-wrapper">
+          <button type="button" class="attendance-btn" (click)="toggleAttendance()">
+
+            {{ showAttendance ? 'Hide Attendance' : 'View Attendance' }}
+
+          </button>
+        </div>
+
+      </div>
+
     </div>
-    <app-employee-attendance></app-employee-attendance>
+
+    <!-- Attendance Section -->
+    <div *ngIf="showAttendance" class="mt-3">
+      <app-employee-attendance></app-employee-attendance>
+    </div>
+
     <p class="copyright">Copyright © {{ getCurrentYear() }} PayraBook All Rights Reserved.</p>
   </div>
 

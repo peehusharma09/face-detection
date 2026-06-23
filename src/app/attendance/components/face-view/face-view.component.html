@@ -5,8 +5,8 @@
 
     <!-- Camera button - top right (mobile only) -->
     <button class="fv-btn-capture-top" (click)="captureAndSubmit()" [disabled]="isLoading">
-        <img src="../assets/camera.jpg" alt="Capture" 
-             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23333%22%3E%3Cpath d=%22M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z%22/%3E%3Cpath d=%22M20 6h-3.17L15 4H9L7.17 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h4.05l1.83-2h4.24l1.83 2H20v10z%22/%3E%3C/svg%3E'">
+        <img src="../assets/camera.jpg" alt="Capture"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23333%22%3E%3Cpath d=%22M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z%22/%3E%3Cpath d=%22M20 6h-3.17L15 4H9L7.17 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h4.05l1.83-2h4.24l1.83 2H20v10z%22/%3E%3C/svg%3E'">
     </button>
 
     <!-- Full-screen camera feed -->
@@ -15,12 +15,15 @@
 
     <!-- Clean Face Detection Loader - Center screen -->
     <div class="fv-heartbeat-loader" *ngIf="isLoading">
-        <div class="face-frame">
-            <div class="corner-bottom-left"></div>
-            <div class="corner-bottom-right"></div>
-        </div>
-        <div class="scanning-line-container">
-            <div class="scanning-line"></div>
+        <div class="face-scanner">
+            <div class="face-frame">
+                <div class="corner-bottom-left"></div>
+                <div class="corner-bottom-right"></div>
+            </div>
+
+            <div class="scanning-line-container">
+                <div class="scanning-line"></div>
+            </div>
         </div>
         <div class="loading-text">
             FACE DETECTION<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
@@ -32,8 +35,8 @@
         <div class="fv-panel-handle" (click)="toggleAttendance()"></div>
         <div class="fv-cards-row">
             <div class="fv-card" *ngFor="let record of attendanceRecords">
-                <img [src]="getLatestImage(record)" class="fv-card-img" alt="employee photo" 
-                     onerror="this.src='https://via.placeholder.com/50?text=Face'">
+                <img [src]="getLatestImage(record)" class="fv-card-img" alt="employee photo"
+                    onerror="this.src='https://via.placeholder.com/50?text=Face'">
                 <div class="fv-card-info">
                     <h4>{{ record.name }}</h4>
                     <div class="fv-card-details">
@@ -66,12 +69,3 @@
     <div class="fv-popup fv-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
 </div>
-
-
-
-
-
-
-
-
-

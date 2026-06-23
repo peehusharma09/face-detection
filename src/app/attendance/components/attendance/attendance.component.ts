@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class AttendanceComponent {
   title = 'attendance_erp';
   currentDate: any;
+  showAttendance = false;
   currentTime: any;
   ipAddress: string | undefined;
   isContentVisible: boolean = true;
@@ -48,7 +49,9 @@ export class AttendanceComponent {
 
     this.getAttendanceMode();
   }
-
+  toggleAttendance() {
+    this.showAttendance = !this.showAttendance;
+  }
   getCurrentYear(): number {
     return new Date().getFullYear();
   }

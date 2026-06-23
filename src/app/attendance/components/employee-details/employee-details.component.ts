@@ -15,6 +15,11 @@ import { LoaderService } from '../loader/loader.service';
   styleUrls: ['./employee-details.component.scss']
 })
 export class EmployeeDetailsComponent {
+  @Output() viewAttendanceClick = new EventEmitter<void>();
+
+  showAttendance() {
+    this.viewAttendanceClick.emit();
+  }
   @Output() valueChange = new EventEmitter<string>();
   employeeId: any = '';
   inLunch: boolean = false;

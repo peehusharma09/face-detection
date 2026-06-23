@@ -204,3 +204,18 @@ button {
     font-size: 17px;
   }
 }
+
+.attendance-btn-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.attendance-btn {
+  padding: 10px 20px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

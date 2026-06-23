@@ -6,13 +6,15 @@
 p.copyright {
   text-align: center;
   font-size: 12px;
+  margin-top: 25px;
+  margin-bottom: 0 !important;
 }
 
 .header-wrapper {
   .logo-img {
-    max-width: 200px;
-    width: 100%;
-
+    max-width: 150px !important;
+    width: 150px !important;
+    height: auto !important;
   }
 }
 
@@ -22,7 +24,8 @@ p.copyright {
 
 .capture-wrapper {
   display: flex;
-  align-items: start;
+  align-items: stretch;
+  gap: 20px;
   margin-top: 0;
 }
 
@@ -38,47 +41,149 @@ p.copyright {
 
 .attendance-wrapper {
   background: #f0eef9;
+  min-height: 100vh;
 }
 
-/* ===== MOBILE RESPONSIVE (≤767px) — desktop untouched ===== */
-@media (max-width: 767px) {
+/* ==========================
+   RIGHT SIDE SECTION
+========================== */
 
-  /* Stack camera (top) and details (bottom) into 2 rows */
-  .capture-wrapper {
-    flex-direction: column;
-    align-items: stretch;
+.details-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 530px;
+}
+
+.attendance-btn-wrapper {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+}
+
+.attendance-btn {
+  background: #1f1f1f;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.attendance-btn:hover {
+  opacity: 0.9;
+}
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 991px) {
+  .details-section {
+    min-height: auto;
   }
 
-  /* Both columns go full width */
+  .attendance-btn-wrapper {
+    margin-top: 20px;
+  }
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 767px) {
+
+  .attendance-wrapper {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-bottom: 80px !important;
+  }
+
+  p.copyright {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  .header-wrapper {
+    margin-bottom: 20px;
+    align-items: center !important;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .header-wrapper .logo-img {
+    max-width: 190px;
+  }
+
+  .date-text {
+    font-size: 12px;
+  }
+
+  .capture-wrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+
   .capture-wrapper .w-50 {
     width: 100% !important;
     max-width: 100% !important;
     flex: 0 0 100% !important;
   }
 
-  /* Camera no longer capped at 50% */
   .app-camera {
     max-width: 100%;
     flex: 0 0 100%;
   }
 
-  /* Header logo + date stack nicely on small screens */
-  .header-wrapper {
-    flex-wrap: wrap;
-    gap: 8px;
+  .details-section {
+    min-height: auto;
+    height: auto;
   }
 
+  .attendance-btn-wrapper {
+    margin-top: 15px;
+    justify-content: center;
+    padding-top: 0;
+  }
+
+  .attendance-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  p.copyright {
+    font-size: 11px;
+    margin-top: 12px;
+  }
+}
+
+/* ==========================
+   EXTRA SMALL DEVICES
+========================== */
+
+@media (max-width: 480px) {
+
   .header-wrapper .logo-img {
-    max-width: 150px;
+    max-width: 120px;
   }
 
   .date-text {
+    font-size: 11px;
+  }
+
+  .attendance-btn {
+    max-width: 100%;
     font-size: 13px;
   }
 
-  /* Reduce wrapper padding so the card fits narrow screens */
-  .attendance-wrapper {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+  p.copyright {
+    font-size: 10px;
   }
 }
