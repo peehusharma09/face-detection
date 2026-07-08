@@ -219,3 +219,33 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* ================= iPad Only ================= */
+
+@media only screen and (min-width:768px) and (max-width:1024px) {
+
+  .flex-container {
+    grid-template-columns: 160px 160px;
+    column-gap: 25px;
+    row-gap: 15px;
+  }
+
+  .label-value {
+    font-size: 15px;
+  }
+
+  .numeric-keyboard {
+    margin-left: 20px;
+    width: calc(100% - 20px);
+  }
+
+  .numeric-keyboard button {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .employee-vid {
+    margin-left: 8px;
+  }
+
+}

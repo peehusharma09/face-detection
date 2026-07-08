@@ -70,3 +70,31 @@
   width: 10px;
   margin-right: 5px;
 }
+
+/* ================= iPad Only ================= */
+
+@media only screen and (min-width:768px) and (max-width:1024px) {
+
+  .employee-box {
+    min-width: 250px;
+  }
+
+  .img-card {
+    max-width: 250px;
+  }
+
+  .employee-info {
+    font-size: 14px;
+  }
+
+  .label-span {
+    font-size: 9px;
+  }
+
+  .img-bg-box,
+  .emp-image {
+    width: 65px !important;
+    height: 65px !important;
+  }
+
+}

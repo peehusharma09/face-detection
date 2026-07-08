@@ -164,6 +164,75 @@ p.copyright {
   }
 }
 
+@media (max-width: 1024px) {
+
+  .attendance-wrapper {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-bottom: 80px !important;
+  }
+
+  p.copyright {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+  .header-wrapper {
+    margin-bottom: 20px;
+    align-items: center !important;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .header-wrapper .logo-img {
+    max-width: 190px;
+  }
+
+  .date-text {
+    font-size: 12px;
+  }
+
+  .capture-wrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .capture-wrapper .w-50 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .app-camera {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+
+  .details-section {
+    min-height: auto;
+    height: auto;
+  }
+
+  .attendance-btn-wrapper {
+    margin-top: 15px;
+
+    padding-top: 0;
+  }
+
+  .attendance-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  p.copyright {
+    font-size: 11px;
+    margin-top: 12px;
+  }
+}
+
 /* ==========================
    EXTRA SMALL DEVICES
 ========================== */
