@@ -1,203 +1,327 @@
-<div class="d-flex align-items-center justify-content-between pt-4 px-4">
-  <h4 class="request-heading py-4">Attendance</h4>
+<div class="attendance-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-left">
+      <h4 class="page-title">
+        <i class="fas fa-clipboard-list"></i>
+        Attendance Summary
+      </h4>
+      <span class="total-records">Total: {{ dataSource.data.length || 0 }} records</span>
+    </div>
+    <div class="header-right">
+      <button class="download-btn" (click)="downloadCSV()">
+        <i class="fas fa-download"></i> Download CSV
+      </button>
+    </div>
+  </div>
 
-
-  <!-- <button mat-raised-button color="primary" (click)="downloadCSV()" class="btn-grad">
-    Download CSV
-  </button>  -->
-</div>
-<div class="main-box shadow p-4 ">
-  <div class="index-2">
-    <div class="d-flex align-items-start gap-3">
-      <div class="search-box">
-        <input type="text" class="search-input" placeholder=" Search By Name" [(ngModel)]="searchfilter"
-          (keyup)="debounceSet()" />
-
-
-        <svg class="search-icon" width="17px" height="17px" viewBox="0 0 24 24" fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-          <g id="SVGRepo_iconCarrier">
-            <path
-              d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-              stroke="#707070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          </g>
-
-        </svg>
-
-      </div>
-
-      <div class="input-main-wrapper" style="margin-right: 0px; display: flex; align-items: center;">
-        <mat-form-field class="punchin-mat-wrapper" style="width: 100%">
-          <mat-date-range-input [rangePicker]="picker1">
-            <input matStartDate placeholder="Start date" [(ngModel)]="startdate" />
-            <input matEndDate placeholder="End date" [(ngModel)]="enddate"
-              (dateChange)="selectrange(startdate, enddate)" />
-          </mat-date-range-input>
-          <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker1></mat-date-range-picker>
-        </mat-form-field>
-        <i class="fa-solid fa-download download-icon" (click)="downloadCSV()"></i>
-      </div>
-
-
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search by employee name..." 
+        [(ngModel)]="searchfilter"
+        (keyup)="debounceSet()"
+      />
+      <button *ngIf="searchfilter" class="clear-btn" (click)="clearSearch()">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
-    <div>
-      <div class="mat-table-container">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-table mat-elevation-z8">
+    <div class="date-filter-wrapper">
+      <mat-form-field appearance="outline" class="date-range-field">
+        <mat-label>Select Date Range</mat-label>
+        <mat-date-range-input [rangePicker]="picker1">
+          <input matStartDate placeholder="Start date" [(ngModel)]="startdate"
+            (dateChange)="selectrange(startdate, enddate)" />
+          <input matEndDate placeholder="End date" [(ngModel)]="enddate"
+            (dateChange)="selectrange(startdate, enddate)" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker1></mat-date-range-picker>
+      </mat-form-field>
+  
+    </div>
+  </div>
 
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">Date</th>
-            <td mat-cell *matCellDef="let element">
-              {{ element?.date | date:'dd MMM yyyy' }}
-            </td>
-          </ng-container>
+  <!-- Table -->
+  <div class="table-wrapper">
+    <div class="table-scroll-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="custom-table">
 
-          <ng-container matColumnDef="VID">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Employee Id
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element?.VID }}</td>
-          </ng-container>
+        <!-- Date -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.date | date:'dd MMM yyyy' }}
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="empImage">
-            <th mat-header-cell *matHeaderCellDef class="blue-theme">
-              Image
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <img [src]="element?.empImage" alt="Employee Image" class="employee-image" />
-            </td>
-          </ng-container>
+        <!-- Employee ID -->
+        <ng-container matColumnDef="VID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee ID</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element?.VID || '--' }}
+          </td>
+        </ng-container>
 
+        <!-- Employee Image -->
+        <ng-container matColumnDef="empImage">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Image</th>
+          <td mat-cell *matCellDef="let element">
+            <img [src]="element?.image || element?.empImage || 'assets/default-avatar.png'" alt="Employee" class="employee-image" />
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Name
-            </th>
-            <td mat-cell *matCellDef="let element">{{ element?.name }}</td>
-          </ng-container>
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="employee-cell">
+              <span>{{ element?.name || '--' }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="In">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              In
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element?.In?.time; else dash">
-                {{ element.In.time | date : 'hh:mm a' }}
-              </ng-container>
-              <ng-template #dash>
-                -
-              </ng-template>
-            </td>
-          </ng-container>
+        <!-- In -->
+        <ng-container matColumnDef="In">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>In</th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element?.In?.time; else dash">
+              {{ element.In.time | date : 'hh:mm a' }}
+            </span>
+            <ng-template #dash>-</ng-template>
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="Out">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Out
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element?.Out?.time; else dash">
-                {{ element.Out.time | date : 'hh:mm a' }}
-              </ng-container>
-              <ng-template #dash>
-                -
-              </ng-template>
-            </td>
-          </ng-container>
+        <!-- Out -->
+        <ng-container matColumnDef="Out">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Out</th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element?.Out?.time; else dash">
+              {{ element.Out.time | date : 'hh:mm a' }}
+            </span>
+            <ng-template #dash>-</ng-template>
+          </td>
+        </ng-container>
 
-
-
-          <ng-container matColumnDef="breakIn">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Break In
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element?.breakIn?.length > 0; else dash">
-                <div *ngFor="let breakIn of element?.breakIn">
-                  {{ breakIn.time | date : 'hh:mm a' }}
-                </div>
-              </ng-container>
-              <ng-template #dash>
-                -
-              </ng-template>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="breakOut">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Break Out
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element?.breakOut?.length > 0; else dash">
-                <div *ngFor="let breakOut of element?.breakOut">
-                  {{ breakOut.time | date : 'hh:mm a' }}
-                </div>
-              </ng-container>
-              <ng-template #dash>
-                -
-              </ng-template>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Total Working Hourssssssss
-            </th>
-
-            <td mat-cell *matCellDef="let element">
-
-              <ng-container *ngIf="element?.Out?.time; else noOut">
-
-                <span [style.color]="
-                    (+element?.totalHour || 0) >= requiredWorkingHours
-                      ? 'green'
-                      : 'red'
-                  " style="font-weight: 600;">
-                  {{ element?.totalHour || '-' }} Hours
-                </span>
-
-              </ng-container>
-
-              <ng-template #noOut>
-                <span style="color:red; font-weight:600;">
-                  -
-                </span>
-              </ng-template>
-
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="image">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="blue-theme">
-              Images
-            </th>
-            <td mat-cell *matCellDef="let element">
-              <div class="image-popup-container">
-                <a class="cursor-pointer" (mouseenter)="showInfo = true" (mouseleave)="showInfo = false"
-                  (click)="openPopup(element._id)">
-                  <!-- View Images -->
-                  <i class="fas fa-info-circle"></i>
-                  <span class="info-icon" *ngIf="showInfo">
-                    <!-- <i class="fas fa-info-circle"></i> -->
-                    <span class="info-tooltip">View Images</span>
-                  </span>
-                </a>
+        <!-- Break In -->
+        <ng-container matColumnDef="breakIn">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Break In</th>
+          <td mat-cell *matCellDef="let element">
+            <ng-container *ngIf="element?.breakIn?.length > 0; else dash">
+              <div class="break-item" *ngFor="let breakIn of element?.breakIn">
+                {{ breakIn.time | date : 'hh:mm a' }}
               </div>
+            </ng-container>
+            <ng-template #dash>-</ng-template>
+          </td>
+        </ng-container>
 
-              <!-- <a class="cursor-pointer" (click)="openPopup(element._id)" >View Images</a> -->
-            </td>
-          </ng-container>
+        <!-- Break Out -->
+        <ng-container matColumnDef="breakOut">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Break Out</th>
+          <td mat-cell *matCellDef="let element">
+            <ng-container *ngIf="element?.breakOut?.length > 0; else dash">
+              <div class="break-item" *ngFor="let breakOut of element?.breakOut">
+                {{ breakOut.time | date : 'hh:mm a' }}
+              </div>
+            </ng-container>
+            <ng-template #dash>-</ng-template>
+          </td>
+        </ng-container>
 
+        <!-- Total Hours -->
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Hours</th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="!element?.Out?.time && !getLastEntryTime(element)">--</span>
+            <span *ngIf="element?.Out?.time || getLastEntryTime(element)" 
+                  [style.color]="getTotalHours(element) >= requiredWorkingHours ? '#22C55E' : '#EF4444'"
+                  style="font-weight:600;">
+              {{ getTotalHours(element).toFixed(2) }} hrs
+            </span>
+          </td>
+        </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns" class="blue-theme"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator #paginator [pageSize]="pageSize" [pageIndex]="pageIndex"
-          class="calling-list-pagenation blue-theme" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons
-          aria-label="Select page"></mat-paginator>
+        <!-- Images -->
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Images</th>
+          <td mat-cell *matCellDef="let element">
+            <button class="view-btn" (click)="openPopup(element)">
+              <i class="fas fa-images"></i> View
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="data-row"></tr>
+
+        <!-- Empty state -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No attendance records found</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Paginator -->
+    <mat-paginator #paginator 
+      [pageSize]="pageSize" 
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="pageSizeOptions" 
+      showFirstLastButtons
+      aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- View Details Popup -->
+<div class="modal-overlay" *ngIf="showPopup" (click)="closePopup()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <i class="fas fa-user-circle"></i>
+        <h2>Attendance Details</h2>
       </div>
+      <button class="close-btn" (click)="closePopup()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Employee Info -->
+      <div class="employee-info">
+        <img [src]="selectedEmployee?.image || selectedEmployee?.empImage || 'assets/default-avatar.png'" alt="Employee" class="popup-avatar" />
+        <div class="employee-details">
+          <h3>{{ selectedEmployee?.name || '--' }}</h3>
+          <p><i class="fas fa-id-badge"></i> {{ selectedEmployee?.VID || '--' }}</p>
+          <p><i class="fas fa-calendar-alt"></i> {{ selectedEmployee?.date | date:'dd MMM yyyy' }}</p>
+          <p><i class="fas fa-envelope"></i> {{ selectedEmployee?.email || '--' }}</p>
+        </div>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-sign-in-alt"></i></div>
+          <div class="detail-content">
+            <span class="detail-label">Check In</span>
+            <span class="detail-value">{{ selectedEmployee?.In?.time ? (selectedEmployee.In.time | date : 'hh:mm a') : '--' }}</span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-sign-out-alt"></i></div>
+          <div class="detail-content">
+            <span class="detail-label">Check Out</span>
+            <span class="detail-value">
+              <ng-container *ngIf="getOutDisplayTime(selectedEmployee); else dash2">
+                {{ getOutDisplayTime(selectedEmployee) | date : 'hh:mm a' }}
+                <span *ngIf="!selectedEmployee?.Out?.time" class="last-entry-badge">(Last Entry)</span>
+              </ng-container>
+              <ng-template #dash2>-</ng-template>
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-clock"></i></div>
+          <div class="detail-content">
+            <span class="detail-label">Total Hours</span>
+            <span class="detail-value">{{ getTotalHours(selectedEmployee).toFixed(2) }} hrs</span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="detail-content">
+            <span class="detail-label">Status</span>
+            <span class="status-badge" [class.status-present]="selectedEmployee?.In?.time"
+                  [class.status-absent]="!selectedEmployee?.In?.time">
+              {{ selectedEmployee?.In?.time ? 'Present' : 'Absent' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Break Details -->
+      <div class="break-section" *ngIf="selectedEmployee?.breakIn?.length > 0 || selectedEmployee?.breakOut?.length > 0">
+        <div class="break-title">
+          <i class="fas fa-coffee"></i>
+          <span>Break Details</span>
+        </div>
+        <div class="break-grid">
+          <div class="break-card" *ngIf="selectedEmployee?.breakIn?.length > 0">
+            <div class="break-icon"><i class="fas fa-play"></i></div>
+            <div class="break-content">
+              <span class="break-label">Break In</span>
+              <span class="break-value">
+                <span *ngFor="let breakIn of selectedEmployee?.breakIn; let last = last">
+                  {{ breakIn.time | date : 'hh:mm a' }}<span *ngIf="!last">, </span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="break-card" *ngIf="selectedEmployee?.breakOut?.length > 0">
+            <div class="break-icon"><i class="fas fa-stop"></i></div>
+            <div class="break-content">
+              <span class="break-label">Break Out</span>
+              <span class="break-value">
+                <span *ngFor="let breakOut of selectedEmployee?.breakOut; let last = last">
+                  {{ breakOut.time | date : 'hh:mm a' }}<span *ngIf="!last">, </span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Images Section -->
+      <div class="images-section" *ngIf="hasImages(selectedEmployee)">
+        <div class="images-title">
+          <i class="fas fa-images"></i>
+          <span>Images</span>
+        </div>
+        <div class="images-grid">
+          <div class="image-card" *ngIf="selectedEmployee?.In?.image">
+            <span class="image-label">Check In</span>
+            <img [src]="selectedEmployee?.In?.image" alt="Check In" class="image-thumbnail" (click)="openImage(selectedEmployee?.In?.image)" />
+          </div>
+          <div class="image-card" *ngIf="selectedEmployee?.breakIn && selectedEmployee?.breakIn[0]?.image">
+            <span class="image-label">Break In</span>
+            <img [src]="selectedEmployee?.breakIn[0]?.image" alt="Break In" class="image-thumbnail" (click)="openImage(selectedEmployee?.breakIn[0]?.image)" />
+          </div>
+          <div class="image-card" *ngIf="selectedEmployee?.breakOut && selectedEmployee?.breakOut[0]?.image">
+            <span class="image-label">Break Out</span>
+            <img [src]="selectedEmployee?.breakOut[0]?.image" alt="Break Out" class="image-thumbnail" (click)="openImage(selectedEmployee?.breakOut[0]?.image)" />
+          </div>
+          <div class="image-card" *ngIf="selectedEmployee?.Out?.image">
+            <span class="image-label">Check Out</span>
+            <img [src]="selectedEmployee?.Out?.image" alt="Check Out" class="image-thumbnail" (click)="openImage(selectedEmployee?.Out?.image)" />
+          </div>
+          <div class="image-card" *ngIf="selectedEmployee?.image || selectedEmployee?.empImage">
+            <span class="image-label">Profile</span>
+            <img [src]="selectedEmployee?.image || selectedEmployee?.empImage" alt="Profile" class="image-thumbnail" (click)="openImage(selectedEmployee?.image || selectedEmployee?.empImage)" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closePopup()">
+        <i class="fas fa-times"></i> Close
+      </button>
     </div>
   </div>
 </div>

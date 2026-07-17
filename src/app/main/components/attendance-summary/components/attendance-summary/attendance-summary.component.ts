@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import * as moment from 'moment';
+import moment from 'moment';
 import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -15,8 +15,6 @@ import {
 } from '@angular/material/core';
 import { CsvService } from 'src/app/attendance/service/csv.service';
 import { EmplyoeeService } from 'src/app/attendance/service/emplyoee.service';
-import { ImagesPopupComponent } from '../../../images-popup/images-popup.component';
-import { MatDialog } from '@angular/material/dialog';
 
 export const MY_FORMATS = {
   parse: {
@@ -44,11 +42,11 @@ export const MY_FORMATS = {
   ],
 })
 export class AttendanceSummaryComponent {
-  showInfo: boolean = false;
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = [
     'date',
     'VID',
+    'empImage',
     'name',
     'In',
     'Out',
@@ -57,26 +55,28 @@ export class AttendanceSummaryComponent {
     'total',
     'image'
   ];
+  
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
   pageSize: number = 10;
   pageIndex: number = 0;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
-  userMenuList: any;
+  pageSizeOptions: number[] = [5, 10, 25, 50, 100];
   moment: any = moment;
-  searchfilter: any;
-  listDate: any;
-  startdate: any;
-  enddate: any;
-  userData: any = localStorage.getItem('userInfo');
-  userInfo: any;
+  searchfilter: string = '';
+  startdate: any = null;
+  enddate: any = null;
   timer: any;
+  requiredWorkingHours: number = 8;
+  
+  // Popup
+  showPopup: boolean = false;
+  selectedEmployee: any = null;
+
   constructor(
     private employeeService: EmplyoeeService,
     private datePipe: DatePipe,
     private csvService: CsvService,
-    private dialog: MatDialog,
   ) {
     const currentDate = new Date();
     const firstDateOfMonth = new Date(
@@ -93,33 +93,43 @@ export class AttendanceSummaryComponent {
     this.enddate = lastDateOfMonth;
     this.selectrange(firstDateOfMonth, lastDateOfMonth);
   }
+
   ngOnInit() {
     this.getSystemSettings();
   }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
+  clearSearch() {
+    this.searchfilter = '';
+    this.Search();
+  }
+
+  clearDateRange() {
+    this.startdate = null;
+    this.enddate = null;
+    this.selectrange(null, null);
+  }
+
   debounce(func: Function, timeout: number = 500) {
     clearTimeout(this.timer);
-
     this.timer = setTimeout(() => { func.apply(this); }, timeout);
   }
 
   debounceSet() {
-    ; this.debounce(() => this.Search());
+    this.debounce(() => this.Search());
   }
 
   Search() {
     this.employeeService.findEmployeeDetailByFilterByName(
       this.searchfilter
     ).subscribe((res: any) => {
-      this.listDate = res;
-      this.dataSource.data = res;
+      this.dataSource.data = res || [];
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      console.log(this.listDate, '----', this.dataSource.data);
     });
   }
 
@@ -128,30 +138,177 @@ export class AttendanceSummaryComponent {
     this.csvService.download(csvData, 'attendance.csv');
   }
 
+  // ============ GET FIRST ENTRY (In or first breakIn) ============
+  getFirstEntryTime(entry: any): string | null {
+    if (entry?.In?.time) {
+      return entry.In.time;
+    }
+    if (entry?.breakIn?.length > 0) {
+      return entry.breakIn[0].time;
+    }
+    return null;
+  }
+
+  // ============ GET LAST ENTRY (Out or last breakOut/breakIn/In) ============
+  getLastEntryTime(entry: any): string | null {
+    // If Out exists, use that
+    if (entry?.Out?.time) {
+      return entry.Out.time;
+    }
+
+    let latestTime: string | null = null;
+    let latestMoment: moment.Moment | null = null;
+
+    // Check all breakOut times
+    if (entry?.breakOut?.length > 0) {
+      for (const breakOut of entry.breakOut) {
+        const time = moment(breakOut.time);
+        if (!latestMoment || time.isAfter(latestMoment)) {
+          latestMoment = time;
+          latestTime = breakOut.time;
+        }
+      }
+    }
+
+    // Check all breakIn times
+    if (entry?.breakIn?.length > 0) {
+      for (const breakIn of entry.breakIn) {
+        const time = moment(breakIn.time);
+        if (!latestMoment || time.isAfter(latestMoment)) {
+          latestMoment = time;
+          latestTime = breakIn.time;
+        }
+      }
+    }
+
+    // Check In time
+    if (entry?.In?.time) {
+      const time = moment(entry.In.time);
+      if (!latestMoment || time.isAfter(latestMoment)) {
+        latestMoment = time;
+        latestTime = entry.In.time;
+      }
+    }
+
+    return latestTime;
+  }
+
+  // ============ GET OUT DISPLAY TIME ============
+  getOutDisplayTime(entry: any): string | null {
+    if (entry?.Out?.time) {
+      return entry.Out.time;
+    }
+    return this.getLastEntryTime(entry);
+  }
+
+  // ============ CALCULATE TOTAL BREAK MINUTES ============
+  getTotalBreakMinutes(entry: any): number {
+    if (!entry?.breakIn?.length || !entry?.breakOut?.length) {
+      return 0;
+    }
+
+    let totalBreakMinutes = 0;
+    const breakInTimes = entry.breakIn.map((b: any) => moment(b.time));
+    const breakOutTimes = entry.breakOut.map((b: any) => moment(b.time));
+
+    const minLength = Math.min(breakInTimes.length, breakOutTimes.length);
+    
+    for (let i = 0; i < minLength; i++) {
+      const breakIn = breakInTimes[i];
+      const breakOut = breakOutTimes[i];
+      
+      if (breakIn.isValid() && breakOut.isValid() && breakOut.isAfter(breakIn)) {
+        const minutes = breakOut.diff(breakIn, 'minutes');
+        totalBreakMinutes += minutes;
+      }
+    }
+
+    return totalBreakMinutes;
+  }
+
+  // ============ CALCULATE TOTAL HOURS ============
+  getTotalHours(entry: any): number {
+    const firstEntry = this.getFirstEntryTime(entry);
+    const lastEntry = this.getLastEntryTime(entry);
+
+    if (!firstEntry || !lastEntry) {
+      return 0;
+    }
+
+    try {
+      const startTime = moment(firstEntry);
+      const endTime = moment(lastEntry);
+      
+      if (!startTime.isValid() || !endTime.isValid() || endTime.isBefore(startTime)) {
+        return 0;
+      }
+
+      let totalMinutes = endTime.diff(startTime, 'minutes');
+      
+      // Check if it's a full day (4 hours or more)
+      const isFullDay = totalMinutes >= 240;
+      
+      if (isFullDay) {
+        const breakMinutes = this.getTotalBreakMinutes(entry);
+        
+        if (breakMinutes > 0 && breakMinutes <= 180) {
+          totalMinutes = totalMinutes - breakMinutes;
+        } else if (breakMinutes > 180) {
+          totalMinutes = totalMinutes - 60;
+        } else {
+          totalMinutes = totalMinutes - 60;
+        }
+      }
+      
+      if (totalMinutes < 0) totalMinutes = 0;
+      
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      
+      return parseFloat((hours + (minutes / 60)).toFixed(2));
+    } catch (error) {
+      console.error('Error calculating hours:', error);
+      return 0;
+    }
+  }
+
+  hasImages(employee: any): boolean {
+    return !!(employee?.In?.image || 
+              (employee?.breakIn?.length > 0 && employee?.breakIn[0]?.image) ||
+              (employee?.breakOut?.length > 0 && employee?.breakOut[0]?.image) ||
+              employee?.Out?.image ||
+              employee?.image ||
+              employee?.empImage);
+  }
+
   convertToCSV(data: any[]): string {
-    const header = ['image', 'Employee Id', 'Employee Name', 'Status', 'Date', 'Time'];
+    const header = ['Date', 'Employee ID', 'Employee Name', 'In', 'Out (Last Entry)', 'Break In', 'Break Out', 'Total Hours'];
     const csvRows = [];
     csvRows.push(header.join(','));
     data.forEach((row: any) => {
+      const breakInTimes = row?.breakIn?.map((b: any) => moment(b.time).format('hh:mm A')).join('; ') || '';
+      const breakOutTimes = row?.breakOut?.map((b: any) => moment(b.time).format('hh:mm A')).join('; ') || '';
+      const outDisplay = this.getOutDisplayTime(row);
       const values = [
-        row.image,
-        row.empID,
-        row.empName,
-        row.status,
-        this.formatDate(row.date),
-        this.formatTime(row.date),
+        row.date ? moment(row.date).format('DD MMM YYYY') : '',
+        row.VID || '',
+        row.name || '',
+        row?.In?.time ? moment(row.In.time).format('hh:mm A') : '',
+        outDisplay ? moment(outDisplay).format('hh:mm A') : '',
+        breakInTimes,
+        breakOutTimes,
+        this.getTotalHours(row).toFixed(2)
       ];
       csvRows.push(values.join(','));
     });
-
     return csvRows.join('\n');
   }
-  requiredWorkingHours: number = 0;
+
   getSystemSettings() {
     this.employeeService.getAllSystemSettings().subscribe(
       (res: any) => {
         if (res?.success) {
-          this.requiredWorkingHours = res.data.workHours;
+          this.requiredWorkingHours = res.data.workHours || 8;
         }
       },
       (error) => {
@@ -159,35 +316,16 @@ export class AttendanceSummaryComponent {
       }
     );
   }
-  getAttendanceStatus(element: any): boolean {
-
-    // If employee has not punched out yet
-    if (!element?.Out?.time) {
-      return false;
-    }
-
-    const totalHours = Number(element?.totalHour || 0);
-
-    return totalHours >= this.requiredWorkingHours;
-  }
-
-  formatDate(date: string): string {
-    return date;
-  }
-
-  formatTime(time: string): string {
-    return time;
-  }
 
   selectrange(startdate: any, enddate: any) {
-    if (!startdate || !enddate) return;
+    if (!startdate || !enddate) {
+      this.loadAllData();
+      return;
+    }
     if (!this.searchfilter) {
       this.searchfilter = '';
     }
-    const formattedStartDate = this.datePipe.transform(
-      startdate,
-      'yyyy-MM-dd'
-    )!;
+    const formattedStartDate = this.datePipe.transform(startdate, 'yyyy-MM-dd')!;
     const formattedEndDate = this.datePipe.transform(enddate, 'yyyy-MM-dd')!;
 
     this.employeeService.findEmployeeDetailByFilterByName(
@@ -195,34 +333,54 @@ export class AttendanceSummaryComponent {
       formattedStartDate,
       formattedEndDate
     ).subscribe((filteredData: any) => {
-      this.dataSource.data = filteredData;
+      this.dataSource.data = filteredData || [];
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
-
-  openPopup(id: any): void {
-    this.employeeService.getEmployeeById(id).subscribe(
-      (response: any) => {
-        const dialogRef = this.dialog.open(ImagesPopupComponent, {
-          width: '1000px',
-          maxWidth: '89vw',
-          data: { ...response },
-          disableClose: false
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-          if (result && result.confirmed === true) {
-            // this.save();
-          } else {
-            // this.cancel();
-          }
-        });
-      },
-      (error: any) => {
-        // this.toastr.toast.snackbarError("API Error: " + error.error.message);
-      }
-    );
+  loadAllData() {
+    this.employeeService.findEmployeeDetailByFilterByName(
+      this.searchfilter || ''
+    ).subscribe((res: any) => {
+      this.dataSource.data = res || [];
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
+  // ============ STATUS METHODS ============
+  getStatus(employee: any): string {
+    if (employee?.In?.time) {
+      return 'Present';
+    }
+    return 'Absent';
+  }
+
+  getStatusClass(employee: any): string {
+    if (employee?.In?.time) {
+      return 'status-present';
+    }
+    return 'status-absent';
+  }
+
+  // ============ POPUP METHODS ============
+  
+  openPopup(employee: any): void {
+    this.selectedEmployee = employee;
+    this.showPopup = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closePopup(): void {
+    this.showPopup = false;
+    this.selectedEmployee = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  openImage(imageUrl: string): void {
+    if (imageUrl) {
+      window.open(imageUrl, '_blank');
+    }
+  }
 }
