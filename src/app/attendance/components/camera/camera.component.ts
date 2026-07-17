@@ -27,6 +27,7 @@ export class CameraComponent implements OnInit, AfterViewInit {
     class: '- - -',
     score: 0
   }];
+  isProcessing: boolean = false;
 
   // constructor(private storage: AngularFireStorage,
   //   private employeeService: EmplyoeeService,
@@ -45,6 +46,10 @@ export class CameraComponent implements OnInit, AfterViewInit {
   ) {
     this.employeeService.employeePicClick.subscribe((value: any) => {
       this.loadImageDetection();
+    });
+
+    this.spinnerService.showLoader.subscribe((value: boolean) => {
+      this.isProcessing = value;
     });
   }
   ngAfterViewInit() {

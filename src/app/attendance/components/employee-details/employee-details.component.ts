@@ -38,6 +38,7 @@ export class EmployeeDetailsComponent {
   imageUrl: any;
   employeeName: any;
   userDetails: any;
+  isProcessing: boolean = false;
 
   constructor(private http: HttpClient,
     private employeeService: EmplyoeeService,
@@ -46,6 +47,10 @@ export class EmployeeDetailsComponent {
     private spinnerService: LoaderService,
     private elementRef: ElementRef
   ) {
+
+    this.spinnerService.showLoader.subscribe((value: boolean) => {
+      this.isProcessing = value;
+    })
 
     this.employeeService.disableEnterBtn.subscribe((value: any) => {
       this.spinnerService.showHideLoader(false);

@@ -19,9 +19,11 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
     isLoading = false;
+    loadingText = 'FACE DETECTION';
     showAttendance = false;
     successMessage = '';
     errorMessage = '';
+    isSpoofError = false;
     attendanceRecords: any[] = [];
     logoUrl: string = '';
     private mediaStream: MediaStream | null = null;
@@ -88,6 +90,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     async captureAndSubmit() {
         if (this.isLoading) return;
         this.isLoading = true;
+        this.loadingText = 'FACE DETECTION';
         this.successMessage = '';
         this.errorMessage = '';
 
@@ -103,7 +106,8 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
             const imageUrl = await this.captureAndUpload();
             const localTime = new Date().toISOString();
-            
+            this.loadingText = 'VERIFYING LIVENESS';
+
             this.employeeService.faceAttendance({ imageUrl, localTime }).subscribe(
                 (response: any) => {
                     this.isLoading = false;
@@ -214,8 +218,12 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private showError(msg: string) {
         this.errorMessage = msg;
+        this.isSpoofError = msg.includes('Spoof detected');
         this.isLoading = false;
-        setTimeout(() => this.errorMessage = '', 4000);
+        setTimeout(() => {
+            this.errorMessage = '';
+            this.isSpoofError = false;
+        }, 4000);
     }
 
     private speak(message: string) {

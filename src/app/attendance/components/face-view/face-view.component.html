@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="loading-text">
-            FACE DETECTION<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            {{ loadingText }}<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
         </div>
     </div>
 
@@ -62,6 +62,8 @@
 
     <!-- Popups -->
     <div class="fv-popup fv-success" *ngIf="successMessage">{{ successMessage }}</div>
-    <div class="fv-popup fv-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="fv-popup fv-error" [class.fv-error-spoof]="isSpoofError" *ngIf="errorMessage">
+        <span *ngIf="isSpoofError" class="fv-spoof-icon">🚫</span>{{ errorMessage }}
+    </div>
 
 </div>

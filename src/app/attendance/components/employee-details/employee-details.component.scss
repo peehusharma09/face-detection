@@ -3,11 +3,16 @@ label {
   // margin-bottom: 5px;
 }
 
+.ed-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
 
 // .d-flex {
 //   display: flex;
 //   flex-direction: row;
-//   align-items: center; 
+//   align-items: center;
 // }
 .helight {
   border: 1px solid red !important;
@@ -70,6 +75,12 @@ button:hover {
 
   :hover {
     background-color: #5a5a5a !important;
+  }
+
+  &:disabled {
+    background-color: #8a8a8a;
+    cursor: not-allowed;
+    opacity: 0.85;
   }
 }
 

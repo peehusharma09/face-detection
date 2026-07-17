@@ -7,10 +7,10 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 
 export class EmplyoeeService {
-  // ApiPath: any = 'http://localhost:8093/api/'
+  ApiPath: any = 'http://localhost:8093/api/'
 
   // ApiPath: any = 'https://entry-systemapinew.onrender.com/api/'
-  ApiPath: any = 'https://entry-systemapinew-6xai.onrender.com/api/'
+  // ApiPath: any = 'https://entry-systemapinew-6xai.onrender.com/api/'
 
 
   employeeAttendance = new BehaviorSubject('');

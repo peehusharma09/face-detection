@@ -11,10 +11,21 @@ p.copyright {
 }
 
 .header-wrapper {
+  margin-bottom: 16px;
+  align-items: center;
+
   .logo-img {
     max-width: 150px !important;
-    width: 150px !important;
-    height: auto !important;
+    width: auto !important;
+    height: 150px !important;
+    object-fit: contain;
+    object-position: left center;
+    margin: 0;
+    display: block;
+  }
+
+  .date-text {
+    margin: 0;
   }
 }
 

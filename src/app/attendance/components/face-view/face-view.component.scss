@@ -529,6 +529,16 @@ body {
     color: #721c24;
 }
 
+.fv-error-spoof {
+    background: #fff3cd;
+    color: #7a4d00;
+    border: 1px solid #ffca6b;
+}
+
+.fv-spoof-icon {
+    margin-right: 8px;
+}
+
 /* ========== DESKTOP: 4 CARDS VISIBLE + HORIZONTAL SCROLL (SCROLLBAR HIDDEN) ========== */
 @media (min-width: 1025px) {
     .fv-attendance-panel {

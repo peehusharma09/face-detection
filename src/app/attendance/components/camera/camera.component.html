@@ -2,4 +2,9 @@
     <video class="w-100 video-box" #video autoplay playsinline [ngStyle]="getStyles()"></video>
     <img #picture>
     <canvas #canvas id="canvas" style="display: none;"></canvas>
+
+    <div class="cam-processing-overlay" *ngIf="isProcessing">
+        <div class="cam-spinner"></div>
+        <p class="cam-processing-text">Processing...</p>
+    </div>
 </div>

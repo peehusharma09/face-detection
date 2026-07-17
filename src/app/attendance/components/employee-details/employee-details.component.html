@@ -1,4 +1,4 @@
-<div class="rounded  px-3 w-100">
+<div class="rounded px-3 w-100 ed-wrapper">
   <div class="d-flex align-items-center id-wrapper mb-3">
     <p class="emp-label m-0 fw-bold">EMP ID:</p>
     <span class="employee-vid">EID</span>
@@ -40,7 +40,7 @@
     <div class="row">
       <button class="cross" (click)="cancel()">Cancel</button>
       <button (click)="onButtonClick(0)">0</button>
-      <button class="enter" (click)="enter()">Enter</button>
+      <button class="enter" (click)="enter()" [disabled]="isProcessing">{{ isProcessing ? 'Processing...' : 'Enter' }}</button>
     </div>
   </div>
 
