@@ -565,8 +565,8 @@ body {
 /* ========== TABLET ========== */
 @media (min-width: 768px) and (max-width: 1024px) {
     .face-frame {
-        width: clamp(220px, 26vmin, 280px);
-        height: clamp(220px, 26vmin, 280px);
+        width: min(80vw, 65vh);
+        height: min(80vw, 65vh);
     }
 
     .fv-attendance-panel {
@@ -588,7 +588,7 @@ body {
 
     .fv-logo {
         max-width: 260px;
-        top: 24px;
+        top: -32px;
     }
 
     .fv-bottom-bar {
@@ -635,9 +635,14 @@ body {
         height: 100%;
     }
 
+    .face-frame {
+        width: min(88vw, 60vh);
+        height: min(88vw, 60vh);
+    }
+
     .fv-logo {
         max-width: 190px !important;
-        top: 12px;
+        top: -20px;
     }
 
     .fv-bottom-bar {
@@ -738,7 +743,7 @@ body {
 @media (max-width: 480px) {
     .fv-logo {
         max-width: 150px !important;
-        top: 10px;
+        top: -6px;
     }
 
     .fv-btn-show {
@@ -814,8 +819,8 @@ body {
     }
 
     .face-frame {
-        width: 120px;
-        height: 120px;
+        width: min(50vw, 70vh);
+        height: min(50vw, 70vh);
     }
 
     .fv-logo {
