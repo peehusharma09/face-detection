@@ -138,7 +138,7 @@ export class AttendanceSummaryComponent {
     this.csvService.download(csvData, 'attendance.csv');
   }
 
-  // ============ GET FIRST ENTRY (In or first breakIn) ============
+  // ============ GET FIRST ENTRY ============
   getFirstEntryTime(entry: any): string | null {
     if (entry?.In?.time) {
       return entry.In.time;
@@ -149,9 +149,8 @@ export class AttendanceSummaryComponent {
     return null;
   }
 
-  // ============ GET LAST ENTRY (Out or last breakOut/breakIn/In) ============
+  // ============ GET LAST ENTRY ============
   getLastEntryTime(entry: any): string | null {
-    // If Out exists, use that
     if (entry?.Out?.time) {
       return entry.Out.time;
     }
@@ -159,7 +158,6 @@ export class AttendanceSummaryComponent {
     let latestTime: string | null = null;
     let latestMoment: moment.Moment | null = null;
 
-    // Check all breakOut times
     if (entry?.breakOut?.length > 0) {
       for (const breakOut of entry.breakOut) {
         const time = moment(breakOut.time);
@@ -170,7 +168,6 @@ export class AttendanceSummaryComponent {
       }
     }
 
-    // Check all breakIn times
     if (entry?.breakIn?.length > 0) {
       for (const breakIn of entry.breakIn) {
         const time = moment(breakIn.time);
@@ -181,7 +178,6 @@ export class AttendanceSummaryComponent {
       }
     }
 
-    // Check In time
     if (entry?.In?.time) {
       const time = moment(entry.In.time);
       if (!latestMoment || time.isAfter(latestMoment)) {
@@ -203,10 +199,22 @@ export class AttendanceSummaryComponent {
 
   // ============ CALCULATE TOTAL BREAK MINUTES ============
   getTotalBreakMinutes(entry: any): number {
-    if (!entry?.breakIn?.length || !entry?.breakOut?.length) {
+    // If no break records at all
+    if (!entry?.breakIn?.length && !entry?.breakOut?.length) {
       return 0;
     }
 
+    // If only breakIn exists (no breakOut) - deduct 1 hour (60 minutes)
+    if (entry?.breakIn?.length > 0 && !entry?.breakOut?.length) {
+      return 60;
+    }
+
+    // If only breakOut exists (no breakIn) - deduct 1 hour (60 minutes)
+    if (!entry?.breakIn?.length && entry?.breakOut?.length > 0) {
+      return 60;
+    }
+
+    // If both breakIn and breakOut exist - calculate actual break time
     let totalBreakMinutes = 0;
     const breakInTimes = entry.breakIn.map((b: any) => moment(b.time));
     const breakOutTimes = entry.breakOut.map((b: any) => moment(b.time));
@@ -217,17 +225,78 @@ export class AttendanceSummaryComponent {
       const breakIn = breakInTimes[i];
       const breakOut = breakOutTimes[i];
       
+      // Only count if breakOut is after breakIn
       if (breakIn.isValid() && breakOut.isValid() && breakOut.isAfter(breakIn)) {
         const minutes = breakOut.diff(breakIn, 'minutes');
-        totalBreakMinutes += minutes;
+        // Only add if duration is reasonable (max 3 hours)
+        if (minutes <= 180) {
+          totalBreakMinutes += minutes;
+        }
       }
     }
 
+    // If actual break time is less than 15 minutes, deduct 1 hour
+    if (totalBreakMinutes > 0 && totalBreakMinutes < 15) {
+      return 60;
+    }
+
+    // If actual break time is more than 3 hours, deduct 1 hour
+    if (totalBreakMinutes > 180) {
+      return 60;
+    }
+
+    // Return actual break time if it's between 15 minutes and 3 hours
     return totalBreakMinutes;
   }
 
   // ============ CALCULATE TOTAL HOURS ============
-  getTotalHours(entry: any): number {
+  getTotalHours(entry: any): string {
+    const firstEntry = this.getFirstEntryTime(entry);
+    const lastEntry = this.getLastEntryTime(entry);
+
+    if (!firstEntry || !lastEntry) {
+      return '0h 0m';
+    }
+
+    try {
+      const startTime = moment(firstEntry);
+      const endTime = moment(lastEntry);
+      
+      if (!startTime.isValid() || !endTime.isValid() || endTime.isBefore(startTime)) {
+        return '0h 0m';
+      }
+
+      let totalMinutes = endTime.diff(startTime, 'minutes');
+      
+      // Check if it's a full day (4 hours or more = 240 minutes)
+      const isFullDay = totalMinutes >= 240;
+      
+      if (isFullDay) {
+        // Deduct break time
+        const breakMinutes = this.getTotalBreakMinutes(entry);
+        
+        // If breakMinutes is 0, deduct 1 hour (default)
+        if (breakMinutes === 0) {
+          totalMinutes = totalMinutes - 60;
+        } else {
+          totalMinutes = totalMinutes - breakMinutes;
+        }
+      }
+      
+      if (totalMinutes < 0) totalMinutes = 0;
+      
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      
+      return `${hours}h ${minutes}m`;
+    } catch (error) {
+      console.error('Error calculating hours:', error);
+      return '0h 0m';
+    }
+  }
+
+  // ============ GET TOTAL HOURS AS NUMBER ============
+  getTotalHoursNumber(entry: any): number {
     const firstEntry = this.getFirstEntryTime(entry);
     const lastEntry = this.getLastEntryTime(entry);
 
@@ -245,27 +314,20 @@ export class AttendanceSummaryComponent {
 
       let totalMinutes = endTime.diff(startTime, 'minutes');
       
-      // Check if it's a full day (4 hours or more)
       const isFullDay = totalMinutes >= 240;
       
       if (isFullDay) {
         const breakMinutes = this.getTotalBreakMinutes(entry);
-        
-        if (breakMinutes > 0 && breakMinutes <= 180) {
-          totalMinutes = totalMinutes - breakMinutes;
-        } else if (breakMinutes > 180) {
+        if (breakMinutes === 0) {
           totalMinutes = totalMinutes - 60;
         } else {
-          totalMinutes = totalMinutes - 60;
+          totalMinutes = totalMinutes - breakMinutes;
         }
       }
       
       if (totalMinutes < 0) totalMinutes = 0;
       
-      const hours = Math.floor(totalMinutes / 60);
-      const minutes = totalMinutes % 60;
-      
-      return parseFloat((hours + (minutes / 60)).toFixed(2));
+      return parseFloat((totalMinutes / 60).toFixed(2));
     } catch (error) {
       console.error('Error calculating hours:', error);
       return 0;
@@ -297,7 +359,7 @@ export class AttendanceSummaryComponent {
         outDisplay ? moment(outDisplay).format('hh:mm A') : '',
         breakInTimes,
         breakOutTimes,
-        this.getTotalHours(row).toFixed(2)
+        this.getTotalHours(row)
       ];
       csvRows.push(values.join(','));
     });

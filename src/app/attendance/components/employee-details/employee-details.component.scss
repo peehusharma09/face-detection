@@ -201,12 +201,25 @@ button {
   /* Status: 2 fluid columns like the reference */
   .flex-container {
     grid-template-columns: 1fr 1fr;
-    column-gap: 20px;
+    column-gap: 10px;
     row-gap: 14px;
   }
 
+  .flex-item {
+    min-width: 0;
+  }
+
+  .flex-item input[type="radio"] {
+    width: 18px !important;
+    height: 18px !important;
+    margin-left: 0 !important;
+    margin-right: 6px !important;
+  }
+
   .label-value {
-    font-size: 15px;
+    font-size: 13px;
+    white-space: normal;
+    margin-left: 0;
   }
 
   /* Larger touch targets */

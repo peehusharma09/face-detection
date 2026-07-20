@@ -135,17 +135,18 @@
         </ng-container>
 
         <!-- Total Hours -->
-        <ng-container matColumnDef="total">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Hours</th>
-          <td mat-cell *matCellDef="let element">
-            <span *ngIf="!element?.Out?.time && !getLastEntryTime(element)">--</span>
-            <span *ngIf="element?.Out?.time || getLastEntryTime(element)" 
-                  [style.color]="getTotalHours(element) >= requiredWorkingHours ? '#22C55E' : '#EF4444'"
-                  style="font-weight:600;">
-              {{ getTotalHours(element).toFixed(2) }} hrs
-            </span>
-          </td>
-        </ng-container>
+    <!-- Total Hours -->
+<ng-container matColumnDef="total">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Hours</th>
+  <td mat-cell *matCellDef="let element">
+    <span *ngIf="!element?.In?.time">--</span>
+    <span *ngIf="element?.In?.time" 
+          [style.color]="getTotalHoursNumber(element) >= requiredWorkingHours ? '#22C55E' : '#EF4444'"
+          style="font-weight:600;">
+      {{ getTotalHours(element) }}
+    </span>
+  </td>
+</ng-container>
 
         <!-- Images -->
         <ng-container matColumnDef="image">
@@ -234,13 +235,16 @@
           </div>
         </div>
 
-        <div class="detail-card">
-          <div class="detail-icon"><i class="fas fa-clock"></i></div>
-          <div class="detail-content">
-            <span class="detail-label">Total Hours</span>
-            <span class="detail-value">{{ getTotalHours(selectedEmployee).toFixed(2) }} hrs</span>
-          </div>
-        </div>
+      <!-- Total Hours -->
+<div class="detail-card">
+  <div class="detail-icon"><i class="fas fa-clock"></i></div>
+  <div class="detail-content">
+    <span class="detail-label">Total Hours</span>
+    <span class="detail-value" [style.color]="getTotalHoursNumber(selectedEmployee) >= requiredWorkingHours ? '#22C55E' : '#EF4444'">
+      {{ getTotalHours(selectedEmployee) }}
+    </span>
+  </div>
+</div>
 
         <div class="detail-card">
           <div class="detail-icon"><i class="fas fa-check-circle"></i></div>
