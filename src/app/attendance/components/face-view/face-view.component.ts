@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
 import { EmplyoeeService } from '../../service/emplyoee.service';
 import { ErpService } from 'src/app/services/erp.service';
 import { LoaderService } from '../loader/loader.service';
-import * as cocoSsd from '@tensorflow-models/coco-ssd';
-import '@tensorflow/tfjs';
+import * as faceapi from '@vladmandic/face-api';
 import { HttpClient } from '@angular/common/http';
 
+const FACE_MODELS_URL = 'assets/face-models';
 const CLOUDINARY_CLOUD_NAME = 'dbly8fcvj';
 const CLOUDINARY_UPLOAD_PRESET = 'face_attendence';
 
@@ -15,6 +15,7 @@ const CLOUDINARY_UPLOAD_PRESET = 'face_attendence';
     styleUrls: ['./face-view.component.scss']
 })
 export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
+    @Input() autoMode: boolean = false;
     @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
     @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
@@ -28,6 +29,15 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     logoUrl: string = '';
     private mediaStream: MediaStream | null = null;
     private recognition: any = null;
+    private faceModelsLoaded = false;
+    private detectionInterval: any = null;
+    private consecutiveFaceFrames = 0;
+    private isCapturing = false;
+    private inCooldown = false;
+    private cooldownTimeout: any = null;
+    private consecutiveFailures = 0;
+    private dualFaceWarned = false;
+    debugStatus = 'init';
 
     constructor(
         private employeeService: EmplyoeeService,
@@ -42,16 +52,129 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        this.debugStatus = 'requesting camera...';
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-            .then(stream => {
+            .then(async stream => {
                 this.mediaStream = stream;
                 const video = this.videoRef.nativeElement;
                 video.srcObject = stream;
                 video.style.transform = 'scaleX(-1)';
+
+                if (this.autoMode) {
+                    this.debugStatus = 'loading face model...';
+                    await this.loadFaceModels();
+                    this.debugStatus = 'model loaded, starting scan';
+                    this.startAutoDetectLoop();
+                } else {
+                    this.debugStatus = 'manual mode';
+                }
             })
-            .catch(() => this.showError('Camera access denied. Please allow camera access in your browser settings.'));
+            .catch((err) => {
+                this.debugStatus = 'camera error: ' + err?.message;
+                this.showError('Camera access denied. Please allow camera access in your browser settings.');
+            });
 
         this.setupVoiceRecognition();
+    }
+
+    private async loadFaceModels() {
+        if (this.faceModelsLoaded) return;
+        try {
+            await faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODELS_URL);
+
+            this.debugStatus = 'starting tf backend (cpu)...';
+            await (faceapi.tf as any).setBackend('cpu');
+            await (faceapi.tf as any).ready();
+
+            this.faceModelsLoaded = true;
+        } catch (e: any) {
+            this.debugStatus = 'model load FAILED: ' + e?.message;
+            throw e;
+        }
+    }
+
+    private startAutoDetectLoop() {
+        this.detectionInterval = setInterval(async () => {
+            if (!this.faceModelsLoaded) { this.debugStatus = 'model not loaded'; return; }
+            if (this.isCapturing) { this.debugStatus = 'capturing...'; return; }
+            if (this.inCooldown) { this.debugStatus = 'cooldown...'; return; }
+            if (this.isLoading) { this.debugStatus = 'busy...'; return; }
+
+            const video = this.videoRef.nativeElement;
+            if (video.readyState < 2) { this.debugStatus = 'video not ready (readyState=' + video.readyState + ')'; return; }
+
+            try {
+                const detectPromise = faceapi.detectAllFaces(
+                    video,
+                    new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 })
+                );
+                const timeoutPromise = new Promise<never>((_, reject) =>
+                    setTimeout(() => reject(new Error('detect timeout')), 3000)
+                );
+                const allDetections = await Promise.race([detectPromise, timeoutPromise]);
+
+                // Ignore small/background faces (posters, reflections, people far
+                // behind) — only count faces that take up a real chunk of the frame.
+                const minFaceWidth = video.videoWidth * 0.12;
+                const detections = allDetections.filter(d => d.box.width >= minFaceWidth);
+
+                if (detections.length >= 2) {
+                    this.consecutiveFaceFrames = 0;
+                    this.debugStatus = `dual face detected (${detections.length})`;
+                    if (!this.dualFaceWarned) {
+                        this.dualFaceWarned = true;
+                        this.showError('Dual face detected. Please ensure only one person is in front of the camera.');
+                        this.speak('Dual face detected. Please make sure only one person is in front of the camera.');
+                    }
+                } else if (detections.length === 1) {
+                    this.dualFaceWarned = false;
+                    this.consecutiveFaceFrames++;
+                    this.debugStatus = `face score=${detections[0].score.toFixed(2)} frames=${this.consecutiveFaceFrames}`;
+                } else {
+                    this.dualFaceWarned = false;
+                    this.consecutiveFaceFrames = 0;
+                    this.debugStatus = 'no face';
+                }
+
+                // Require a stable single face across several frames so someone briefly
+                // passing behind the camera doesn't trigger an attendance mark.
+                if (this.consecutiveFaceFrames >= 4) {
+                    this.consecutiveFaceFrames = 0;
+                    this.debugStatus = 'triggering capture';
+                    this.triggerAutoCapture();
+                }
+            } catch (e: any) {
+                this.debugStatus = 'detect error: ' + e?.message;
+                console.error('Face detection error', e);
+            }
+        }, 500);
+    }
+
+    private async triggerAutoCapture() {
+        this.isCapturing = true;
+        this.errorMessage = '';
+        this.successMessage = '';
+        await this.captureAndSubmit();
+        this.isCapturing = false;
+
+        const failed = !!this.errorMessage;
+        this.consecutiveFailures = failed ? this.consecutiveFailures + 1 : 0;
+        this.startCooldown(failed);
+    }
+
+    private startCooldown(failed: boolean = false) {
+        this.inCooldown = true;
+        clearTimeout(this.cooldownTimeout);
+
+        // Back off on repeated failures (e.g. liveness check rejects) so the
+        // camera/voice prompt doesn't spam the person every ~20s.
+        const duration = failed
+            ? Math.min(8000 * this.consecutiveFailures, 30000)
+            : 2500;
+
+        this.cooldownTimeout = setTimeout(() => {
+            this.inCooldown = false;
+        }, duration);
     }
 
     getSystemLogo() {
@@ -71,6 +194,8 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.mediaStream?.getTracks().forEach(t => t.stop());
         this.recognition?.stop();
+        clearInterval(this.detectionInterval);
+        clearTimeout(this.cooldownTimeout);
     }
 
     @HostListener('document:keydown', ['$event'])
@@ -95,11 +220,14 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.errorMessage = '';
 
         try {
-            const model = await cocoSsd.load();
-            const predictions = await model.detect(this.videoRef.nativeElement);
-            if (!predictions.some((p: any) => p.class === 'person')) {
-                this.showError('No person detected. Please stand in front of the camera.');
-                this.speak('No person detected. Please stand in front of the camera.');
+            await this.loadFaceModels();
+            const detection = await faceapi.detectSingleFace(
+                this.videoRef.nativeElement,
+                new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.6 })
+            );
+            if (!detection) {
+                this.showError('No face detected. Please stand in front of the camera.');
+                this.speak('No face detected. Please stand in front of the camera.');
                 this.isLoading = false;
                 return;
             }
