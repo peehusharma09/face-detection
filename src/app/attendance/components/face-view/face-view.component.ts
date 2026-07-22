@@ -243,6 +243,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.showSuccess(msg);
                     this.speak(msg);
                     this.fetchAttendanceData();
+                    this.employeeService.employeeAttendanceFun(response.empID);
                 },
                 (error: any) => {
                     this.isLoading = false;
@@ -335,6 +336,21 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!events.length) return record.In?.image || '';
         events.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
         return events[0].image;
+    }
+
+    private expandedBreakKey: string | null = null;
+
+    private recordKey(record: any): string {
+        return `${record?.VID ?? record?.name ?? ''}_${record?.date ?? ''}`;
+    }
+
+    toggleBreaks(record: any): void {
+        const key = this.recordKey(record);
+        this.expandedBreakKey = this.expandedBreakKey === key ? null : key;
+    }
+
+    isBreaksExpanded(record: any): boolean {
+        return this.expandedBreakKey === this.recordKey(record);
     }
 
     private showSuccess(msg: string) {

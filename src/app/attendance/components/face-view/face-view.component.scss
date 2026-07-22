@@ -239,6 +239,14 @@ body {
     overflow-y: auto;
 }
 
+/* The embedded manual-attendance card list assumes a white page background;
+   strip that outer wrapper's background here since fv-attendance-panel sits
+   on the full-screen dark camera view. */
+::ng-deep .fv-attendance-panel .bg-white {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 /* Scrollbar styling - visible on mobile only */
 .fv-attendance-panel::-webkit-scrollbar {
     width: 4px;
@@ -321,6 +329,13 @@ body {
 .fv-card-details p span {
     font-weight: bold;
     color: #333;
+}
+
+.fv-card-details .break-toggle {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: 700;
+    margin-left: 4px;
 }
 
 /* Bottom Bar */
@@ -559,6 +574,14 @@ body {
     .camera-icon {
         width: 54px;
         height: 54px;
+    }
+}
+
+/* ========== DESKTOP (large monitors) ========== */
+@media (min-width: 1367px) {
+    .face-frame {
+        width: clamp(460px, 50vmin, 700px);
+        height: clamp(360px, 40vmin, 560px);
     }
 }
 

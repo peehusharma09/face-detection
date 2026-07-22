@@ -60,6 +60,13 @@
   text-overflow: ellipsis;
 }
 
+.break-toggle {
+  cursor: pointer;
+  color: #007bff;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
 @media (max-width: 767px) {
   .img-card {
     max-width: 100%;

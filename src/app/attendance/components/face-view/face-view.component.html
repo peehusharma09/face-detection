@@ -31,22 +31,7 @@
 
     <!-- Attendance panel -->
     <div class="fv-attendance-panel" [class.visible]="showAttendance">
-        <div class="fv-cards-row">
-            <div class="fv-card" *ngFor="let record of attendanceRecords">
-                <img [src]="getLatestImage(record)" class="fv-card-img" alt="employee photo"
-                    onerror="this.src='https://via.placeholder.com/50?text=Face'">
-                <div class="fv-card-info">
-                    <h4>{{ record.name }}</h4>
-                    <div class="fv-card-details">
-                        <p><span>📥 In:</span> {{ formatTime(record.In?.time) }}</p>
-                        <p><span>📤 Out:</span> {{ formatTime(record.Out?.time) }}</p>
-                        <p><span>📅 Date:</span> {{ record.date | date:'dd MMM yyyy':'Asia/Kolkata' }}</p>
-                        <p><span>🍽️ Break In:</span> {{ getBreakTimes(record.breakIn) }}</p>
-                        <p><span>🏃 Break Out:</span> {{ getBreakTimes(record.breakOut) }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-employee-attendance *ngIf="showAttendance"></app-employee-attendance>
     </div>
 
     <!-- Bottom bar -->
