@@ -40,4 +40,19 @@ export class EmployeeAttendanceComponent {
     }
     );
   }
+
+  private expandedBreakKey: string | null = null;
+
+  private recordKey(detail: any): string {
+    return `${detail?.VID ?? detail?.name ?? ''}_${detail?.date ?? ''}`;
+  }
+
+  toggleBreaks(detail: any): void {
+    const key = this.recordKey(detail);
+    this.expandedBreakKey = this.expandedBreakKey === key ? null : key;
+  }
+
+  isBreaksExpanded(detail: any): boolean {
+    return this.expandedBreakKey === this.recordKey(detail);
+  }
 }

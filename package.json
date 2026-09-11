@@ -34,6 +34,7 @@
     "@tensorflow-models/coco-ssd": "^2.2.3",
     "@tensorflow/tfjs": "^4.19.0",
     "@types/googlemaps": "^3.43.3",
+    "@vladmandic/face-api": "^1.7.15",
     "apexcharts": "^3.48.0",
     "aws-sdk": "^2.1593.0",
     "bn-ng-idle": "^2.0.5",

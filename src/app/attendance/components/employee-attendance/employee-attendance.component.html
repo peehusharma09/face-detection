@@ -47,12 +47,15 @@
               Out: {{ detail.Out?.time ? (detail.Out.time | date:'hh:mm a':'Asia/Kolkata') : '-' }}
 
               <ng-container *ngFor="let breakIn of detail.breakIn; let i = index">
-                <p class="label-span">
+                <p class="label-span" *ngIf="i === 0 || isBreaksExpanded(detail)">
                   B. In {{ i + 1 }}:
                   {{ breakIn?.time ? (breakIn.time | date:'hh:mm a':'Asia/Kolkata') : '-' }}
 
                   B. Out {{ i + 1 }}:
                   {{ detail.breakOut[i]?.time ? (detail.breakOut[i].time | date:'hh:mm a':'Asia/Kolkata') : '-' }}
+                  <span class="break-toggle" *ngIf="i === 0 && detail.breakIn?.length > 1" (click)="toggleBreaks(detail)">
+                    {{ isBreaksExpanded(detail) ? '▲' : '...' }}
+                  </span>
                 </p>
               </ng-container>
           </div>

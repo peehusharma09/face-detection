@@ -13,9 +13,11 @@ body {
 }
 
 .fv-wrapper {
-    position: relative;
-    width: 100vw;
+    position: fixed;
+    inset: 0;
+    width: 100%;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -25,7 +27,7 @@ body {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    max-width: 150px;
+    max-width: 220px;
     height: auto;
     z-index: 99;
     transition: all 0.3s ease;
@@ -60,13 +62,10 @@ body {
 /* ================= SCANNER ================= */
 
 .face-frame {
-    /* Large "real scan" frame that covers the face left/right/top/bottom.
-       Portrait rectangle, scales with viewport, capped on big screens. */
-    width: min(82vw, 360px);
-    height: min(62vh, 480px);
-    max-height: 78vh;
+    width: clamp(140px, 28vmin, 260px);
+    height: clamp(140px, 28vmin, 260px);
     border: 2px solid #0096ff;
-    border-radius: 16px;
+    border-radius: 12px;
     position: relative;
     overflow: hidden;
 }
@@ -94,12 +93,10 @@ body {
 
     box-shadow: 0 0 12px #00ccff;
 
-    transform: translateZ(0);
     will-change: top;
 
-    /* Smooth up-down motion - `top` is relative to the frame-sized
-       container, so this tracks the frame height at any size */
-    animation: scanMove 2.4s ease-in-out infinite alternate;
+    /* Smooth up-down motion, scales with the frame automatically */
+    animation: scanMove 2s ease-in-out infinite alternate;
 }
 
 @keyframes scanMove {
@@ -109,14 +106,6 @@ body {
 
     to {
         top: calc(100% - 4px);
-    }
-}
-
-/* Landscape phones: keep the frame within screen height */
-@media (max-width: 900px) and (orientation: landscape) {
-    .face-frame {
-        width: min(60vw, 320px);
-        height: min(82vh, 320px);
     }
 }
 
@@ -251,6 +240,14 @@ body {
     overflow-y: auto;
 }
 
+/* The embedded manual-attendance card list assumes a white page background;
+   strip that outer wrapper's background here since fv-attendance-panel sits
+   on the full-screen dark camera view. */
+::ng-deep .fv-attendance-panel .bg-white {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 /* Scrollbar styling - visible on mobile only */
 .fv-attendance-panel::-webkit-scrollbar {
     width: 4px;
@@ -333,6 +330,13 @@ body {
 .fv-card-details p span {
     font-weight: bold;
     color: #333;
+}
+
+.fv-card-details .break-toggle {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: 700;
+    margin-left: 4px;
 }
 
 /* Bottom Bar */
@@ -519,25 +523,76 @@ body {
         flex: 0 0 auto;
     }
 
+    .fv-logo {
+        max-width: 180px;
+        top: 6px;
+    }
+
     .fv-btn-capture {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
     }
 
     .camera-icon {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
     }
 
     .fv-btn-show {
-        padding: 12px 24px;
-        font-size: 15px;
-        max-width: 200px;
+        padding: 14px 28px;
+        font-size: 16px;
+        max-width: 220px;
+    }
+}
+
+/* ========== LARGE TABLET / IPAD PRO LANDSCAPE ========== */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .face-frame {
+        width: clamp(240px, 26vmin, 320px);
+        height: clamp(240px, 26vmin, 320px);
+    }
+
+    .fv-logo {
+        max-width: 420px;
+        top: 32px;
+    }
+
+    .fv-bottom-bar {
+        bottom: 36px;
+    }
+
+    .fv-btn-show {
+        padding: 20px 36px;
+        font-size: 22px;
+        max-width: 300px;
+    }
+
+    .fv-btn-capture {
+        width: 110px;
+        height: 110px;
+    }
+
+    .camera-icon {
+        width: 54px;
+        height: 54px;
+    }
+}
+
+/* ========== DESKTOP (large monitors) ========== */
+@media (min-width: 1367px) {
+    .face-frame {
+        width: clamp(460px, 50vmin, 700px);
+        height: clamp(360px, 40vmin, 560px);
     }
 }
 
 /* ========== TABLET ========== */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
+    .face-frame {
+        width: min(80vw, 65vh);
+        height: min(80vw, 65vh);
+    }
+
     .fv-attendance-panel {
         bottom: 90px;
         max-height: 45vh;
@@ -555,19 +610,37 @@ body {
         flex: 1 1 calc(50% - 18px);
     }
 
+    .fv-logo {
+        max-width: 260px;
+        top: -32px;
+    }
+
+    .fv-bottom-bar {
+        bottom: 28px;
+        left: 24px;
+        right: 24px;
+        width: calc(100% - 48px);
+    }
+
+    .fv-btn-show {
+        padding: 14px 26px;
+        font-size: 16px;
+        max-width: 210px;
+    }
+
     .fv-btn-capture {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
     }
 
     .camera-icon {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
     }
 }
 
 /* ========== MOBILE - SCROLLBAR VISIBLE (ORIGINAL BEHAVIOR) ========== */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 
     body,
     html {
@@ -586,9 +659,14 @@ body {
         height: 100%;
     }
 
+    .face-frame {
+        width: min(88vw, 60vh);
+        height: min(88vw, 60vh);
+    }
+
     .fv-logo {
-        max-width: 130px !important;
-        top: 12px;
+        max-width: 190px !important;
+        top: -20px;
     }
 
     .fv-bottom-bar {
@@ -685,8 +763,8 @@ body {
 
 @media (max-width: 480px) {
     .fv-logo {
-        max-width: 110px !important;
-        top: 10px;
+        max-width: 150px !important;
+        top: -6px;
     }
 
     .fv-btn-show {
@@ -706,7 +784,8 @@ body {
     }
 
     .fv-heartbeat-loader {
-        padding: 0;
+        padding: 20px 25px;
+        min-width: 200px;
     }
 
     .loading-text {
@@ -756,6 +835,11 @@ body {
 
     .fv-heartbeat-loader {
         padding: 10px 20px;
+    }
+
+    .face-frame {
+        width: min(50vw, 70vh);
+        height: min(50vw, 70vh);
     }
 
     .fv-logo {

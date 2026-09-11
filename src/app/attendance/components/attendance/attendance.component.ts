@@ -18,6 +18,7 @@ export class AttendanceComponent {
   isContentVisible: boolean = true;
   activeView: 'angular' | 'faceview' = 'angular';
   attendanceType: string = 'manual';
+  facialAutoMode: boolean = false;
   logoUrl: string = '';
   constructor(private datePipe: DatePipe,
     private ipService: IpService,
@@ -86,13 +87,15 @@ export class AttendanceComponent {
           this.attendanceType =
             res?.data?.attendanceType || 'manual';
 
-          if (this.attendanceType === 'facial') {
+          if (this.attendanceType === 'manual facial' || this.attendanceType === 'auto facial') {
 
             this.activeView = 'faceview';
+            this.facialAutoMode = this.attendanceType === 'auto facial';
 
           } else {
 
             this.activeView = 'angular';
+            this.facialAutoMode = false;
 
           }
 
@@ -104,6 +107,7 @@ export class AttendanceComponent {
 
           this.attendanceType = 'manual';
           this.activeView = 'angular';
+          this.facialAutoMode = false;
 
         }
 
