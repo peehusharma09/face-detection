@@ -7,10 +7,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 
 export class EmplyoeeService {
-  // ApiPath: any = 'http://localhost:8093/api/'
-
-  
-  ApiPath: any = 'https://entry-systemapinew-6xai.onrender.com/api/'
+  ApiPath: any = 'https://erp-api-face.onrender.com/api/'
 
 
   employeeAttendance = new BehaviorSubject('');
@@ -63,7 +60,7 @@ export class EmplyoeeService {
   }
 
   getEmployeeDetailsById(employeeId: any): Observable<any> {
-    return this.http.get(`${this.ApiPath}findByEmployeeID/${employeeId}`, {
+    return this.http.get(`${this.ApiPath}employee/${employeeId}`, {
       headers: this.getHeaders(),
     });
   }
@@ -77,7 +74,7 @@ export class EmplyoeeService {
     if (toDate) {
       queryParams += `&todate=${toDate}`;
     }
-    const url = `${this.ApiPath}/findEmployeeDetailByFilter?${queryParams}`;
+    const url = `${this.ApiPath}findEmployeeDetailByFilter?${queryParams}`;
     return this.http.get(url, {
       headers: this.getHeaders()
     });
@@ -145,7 +142,7 @@ export class EmplyoeeService {
   }
   getAllSystemSettings() {
     return this.http.get(
-      'https://erp-backend-y4l2.onrender.com/getAllSystemSettings'
+      'https://erp-api-face.onrender.com/getAllSystemSettings'
     );
   }
 }

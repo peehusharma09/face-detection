@@ -55,7 +55,7 @@ export class FaceViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getSystemLogo() {
-        this.http.get<any>('https://erp-backend-y4l2.onrender.com/getAllSystemSettings')
+        this.http.get<any>('https://erp-api-face.onrender.com/getAllSystemSettings')
             .subscribe({
                 next: (res) => {
                     if (res?.data?.logo) {

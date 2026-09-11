@@ -50,8 +50,9 @@ body {
     justify-content: center;
     gap: 20px;
     background: transparent;
-    padding: 30px 40px;
-    min-width: 280px;
+    padding: 0;
+    width: max-content;
+    max-width: 100vw;
 }
 
 
@@ -59,10 +60,13 @@ body {
 /* ================= SCANNER ================= */
 
 .face-frame {
-    width: 200px;
-    height: 200px;
+    /* Large "real scan" frame that covers the face left/right/top/bottom.
+       Portrait rectangle, scales with viewport, capped on big screens. */
+    width: min(82vw, 360px);
+    height: min(62vh, 480px);
+    max-height: 78vh;
     border: 2px solid #0096ff;
-    border-radius: 12px;
+    border-radius: 16px;
     position: relative;
     overflow: hidden;
 }
@@ -90,88 +94,29 @@ body {
 
     box-shadow: 0 0 12px #00ccff;
 
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+    transform: translateZ(0);
+    will-change: top;
 
-    /* Smooth up-down motion */
-    animation: scanMove 2s ease-in-out infinite alternate;
+    /* Smooth up-down motion - `top` is relative to the frame-sized
+       container, so this tracks the frame height at any size */
+    animation: scanMove 2.4s ease-in-out infinite alternate;
 }
 
 @keyframes scanMove {
     from {
-        transform: translateY(0);
+        top: 0;
     }
 
     to {
-        transform: translateY(196px);
+        top: calc(100% - 4px);
     }
 }
 
-
-
-/* Tablet + Mobile */
-@media (max-width: 768px) {
+/* Landscape phones: keep the frame within screen height */
+@media (max-width: 900px) and (orientation: landscape) {
     .face-frame {
-        width: 180px;
-        height: 180px;
-    }
-
-    .scanning-line {
-        animation: scanMoveMobile 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes scanMoveMobile {
-        from {
-            transform: translateY(0);
-        }
-
-        to {
-            transform: translateY(176px);
-        }
-    }
-}
-
-/* Small Mobile */
-@media (max-width: 480px) {
-    .face-frame {
-        width: 150px;
-        height: 150px;
-    }
-
-    .scanning-line {
-        animation: scanMoveSmall 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes scanMoveSmall {
-        from {
-            transform: translateY(0);
-        }
-
-        to {
-            transform: translateY(146px);
-        }
-    }
-}
-
-/* Landscape Mobile */
-@media (max-width: 768px) and (orientation: landscape) {
-    .face-frame {
-        width: 120px;
-        height: 120px;
-    }
-
-    .scanning-line {
-        animation: scanMoveLandscape 2s linear infinite;
-    }
-
-    @keyframes scanMoveLandscape {
-        from {
-            top: 0;
-        }
-
-        to {
-            top: 116px;
-        }
+        width: min(60vw, 320px);
+        height: min(82vh, 320px);
     }
 }
 
@@ -675,16 +620,8 @@ body {
     }
 
     .fv-heartbeat-loader {
-        padding: 25px 35px;
-        min-width: 240px;
+        padding: 0;
         background: transparent;
-    }
-
-
-
-    .face-frame {
-        width: 180px;
-        height: 180px;
     }
 
     .loading-text {
@@ -769,15 +706,7 @@ body {
     }
 
     .fv-heartbeat-loader {
-        padding: 20px 25px;
-        min-width: 200px;
-    }
-
-
-
-    .face-frame {
-        width: 150px;
-        height: 150px;
+        padding: 0;
     }
 
     .loading-text {
@@ -827,11 +756,6 @@ body {
 
     .fv-heartbeat-loader {
         padding: 10px 20px;
-    }
-
-    .face-frame {
-        width: 120px;
-        height: 120px;
     }
 
     .fv-logo {

@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ErpService extends ApiService {
-  // localpath:any = `http://localhost:4000`;
-  localpath:any=`https://erp-backend-y4l2.onrender.com`
+  localpath:any=`https://erp-api-face.onrender.com`
 
 
   GetAllEmployees() {
