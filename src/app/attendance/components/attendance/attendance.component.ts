@@ -87,7 +87,7 @@ export class AttendanceComponent {
           this.attendanceType =
             res?.data?.attendanceType || 'manual';
 
-          if (this.attendanceType === 'manual facial' || this.attendanceType === 'auto facial') {
+          if (this.attendanceType === 'facial' || this.attendanceType === 'manual facial' || this.attendanceType === 'auto facial') {
 
             this.activeView = 'faceview';
             this.facialAutoMode = this.attendanceType === 'auto facial';
